@@ -1,0 +1,33 @@
+# Build / IDE
+.gradle/
+**/build/
+**/run/
+**/out/
+**/bin/
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.DS_Store
+Thumbs.db
+*.log
+
+# Local JDK drop used for builds (not source)
+.jdk21/
+
+# Vendored AE2 upstream tree — keep local for mixin reference, never commit
+Applied-Energistics-2-main/
+
+# Release staging / secrets
+secrets/
+*.env
+local.env
+
+# OS / temp
+*.tmp
+*.bak
+*~

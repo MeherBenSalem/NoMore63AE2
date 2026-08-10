@@ -1,0 +1,44 @@
+/*
+ * No More 63 AE2
+ * A small addon that makes the ME item storage cell type limit configurable,
+ * replacing the hardcoded AE2 default of 63.
+ *
+ * Implementation: a single Mixin into appeng.me.cells.BasicCellInventory that
+ * overrides the effective type-count cap for item-key cells using a value
+ * loaded from this addon's own NeoForge ModConfigSpec.
+ */
+
+plugins {
+    id 'net.neoforged.moddev'
+}
+
+version = '0.1.0'
+group = 'nm63ae2'
+
+base {
+    archivesName = "no_more_63_ae2"
+}
+
+neoForge {
+    version = rootProject.neoforge_version
+    validateAccessTransformers = true
+
+    mods {
+        no_more_63_ae2 {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+dependencies {
+    // Compile against AE2's main classes (AE2 is the root project of this build).
+    // compileOnly so AE2 is *not* bundled inside the addon jar - it is a separate
+    // installed mod at runtime (declared REQUIRED in the addon's neoforge.mods.toml).
+    compileOnly project(':')
+}

@@ -1,0 +1,28 @@
+{
+    "schemaVersion": 1,
+    "id": "no_more_63_ae2",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "license": "${license}",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "nm63ae2.NoMore63AE2"
+        ]
+    },
+    "mixins": [
+        "no_more_63_ae2.mixins.json",
+        "no_more_63_ae2.fabric.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${fabric_loader_version}",
+        "fabric-api": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=${java_version}",
+        "ae2": "${ae2_version_range_fabric}"
+    }
+}
