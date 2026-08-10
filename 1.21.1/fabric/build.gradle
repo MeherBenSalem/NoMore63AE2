@@ -17,6 +17,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     modCompileOnly "org.appliedenergistics:appliedenergistics2:${ae2_version}"
     modLocalRuntime "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+    // Avoid nesting :common as a jar dependency — Loom remapJar was emitting empty jars.
+    configurations.implementation.dependencies.removeIf { dep ->
+        dep instanceof ProjectDependency && dep.dependencyProject.path == ':common'
+    }
 }
 
 loom {
@@ -42,3 +46,7 @@ loom {
         }
     }
 }
+remapJar {
+    addNestedDependencies = false
+}
+
