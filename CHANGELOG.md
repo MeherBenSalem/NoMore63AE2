@@ -1,5 +1,10 @@
 # No More 63 AE2 — Changelog
 
+## 0.1.2
+
+### Bug Fixes
+* **Fabric mixin target mismatch** — `BasicCellInventoryCreateMixin` no longer pins a Mojang-named `ItemStack` method descriptor with `remap = false`. Fabric AE2 ships with intermediary (`net.minecraft.class_1799`), so the old selector never matched and crashed on mixin apply. The injector now selects `createInventory` by name only, which works on Fabric, Forge, and NeoForge.
+
 ## 0.1.1
 
 ### Bug Fixes

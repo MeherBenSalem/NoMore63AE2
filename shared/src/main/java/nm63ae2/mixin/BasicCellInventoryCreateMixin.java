@@ -17,7 +17,7 @@ import nm63ae2.CellTypeLimitPatches;
 public abstract class BasicCellInventoryCreateMixin {
 
     @Inject(
-            method = "createInventory(Lnet/minecraft/world/item/ItemStack;Lappeng/api/storage/cells/ISaveProvider;)Lappeng/me/cells/BasicCellInventory;",
+            method = "createInventory",
             at = @At("RETURN"),
             remap = false)
     private static void noMore63AE2$patchCreatedCell(CallbackInfoReturnable<BasicCellInventory> cir) {

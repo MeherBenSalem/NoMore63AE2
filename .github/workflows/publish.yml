@@ -1,5 +1,4 @@
 # Dual-publish NightBeam mods/plugins to Modrinth + CurseForge on version tags.
-# Copy to each mod repo as: .github/workflows/publish.yml
 #
 # Org/repo secrets:
 #   MODRINTH_TOKEN
@@ -57,31 +56,51 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: Build
+      - name: Build 1.20.1
+        working-directory: 1.20.1
         run: |
-          chmod +x gradlew 2>/dev/null || true
-          if [ -f gradlew ]; then ./gradlew build --no-daemon
-          else gradle build --no-daemon
-          fi
+          chmod +x gradlew
+          ./gradlew build --no-daemon
+
+      - name: Build 1.21.1
+        working-directory: 1.21.1
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon
 
       - name: Find jars
         id: jars
         shell: bash
         run: |
-          mapfile -t JARS < <(find . -type f -path "*/build/libs/*.jar" \
+          mkdir -p dist
+          mapfile -t JARS < <(find 1.20.1 1.21.1 -type f \
+            \( -path "*/fabric/build/libs/*.jar" -o -path "*/forge/build/libs/*.jar" -o -path "*/neoforge/build/libs/*.jar" \) \
             ! -name "*-sources.jar" ! -name "*-javadoc.jar" \
-            ! -name "*-dev.jar" ! -name "*-dev-shadow.jar" | head -n 20)
+            ! -name "*-dev.jar" ! -name "*-dev-shadow.jar" \
+            ! -name "*-common-*.jar" | sort)
           if [ ${#JARS[@]} -eq 0 ]; then
-            echo "No jars in build/libs" >&2
+            echo "No loader jars in build/libs" >&2
             exit 1
           fi
-          printf '%s\n' "${JARS[@]}"
+          for jar in "${JARS[@]}"; do
+            cp "$jar" dist/
+            echo "$jar"
+          done
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "list<<$EOF" >> "$GITHUB_OUTPUT"
           printf '%s\n' "${JARS[@]}" >> "$GITHUB_OUTPUT"
           echo "$EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: no-more-63-ae2-${{ steps.ver.outputs.version }}
+          path: dist/*.jar
+          if-no-files-found: error
+          retention-days: 14
+
       - uses: actions/setup-node@v4
+        if: ${{ inputs.dry_run != 'true' }}
         with:
           node-version: "20"
 

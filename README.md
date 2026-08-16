@@ -73,7 +73,7 @@ The active value is logged on startup. Config changes require a restart (no hot-
 
 - **Class:** `appeng.me.cells.BasicCellInventory`
 - **Mixin:** `nm63ae2.mixin.BasicCellInventoryCreateMixin` (patches `BasicCellInventory.createInventory` after construction)
-- **Injection:** Before `getUpgradesInventory()` in the constructor, after AE2 clamps types to 63
+- **Injection:** `@Inject(method = "createInventory", at = @At("RETURN"))` — after AE2 constructs and clamps types to 63, then recompute equal-distribution if needed
 - **Scope:** Item storage cells only (`AEKeyType.items()`); fluid/other cells unchanged
 
 ## Known limitations
