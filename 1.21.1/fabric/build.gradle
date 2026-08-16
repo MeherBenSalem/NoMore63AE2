@@ -17,7 +17,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     modCompileOnly "org.appliedenergistics:appliedenergistics2:${ae2_version}"
     modLocalRuntime "org.appliedenergistics:appliedenergistics2:${ae2_version}"
-    // Avoid nesting :common as a jar dependency — Loom remapJar was emitting empty jars.
+    // Loom nests project implementation deps into remapJar; nesting :common produced empty
+    // intermediary jars. Sources/resources still come from commonJava/commonResources.
     configurations.implementation.dependencies.removeIf { dep ->
         dep instanceof ProjectDependency && dep.dependencyProject.path == ':common'
     }
@@ -46,7 +47,10 @@ loom {
         }
     }
 }
-remapJar {
-    addNestedDependencies = false
-}
 
+// Force remapJar to remap the jar that actually contains our classes (Loom's -dev jar),
+// instead of an empty nested-include intermediate.
+tasks.named('remapJar', net.fabricmc.loom.task.RemapJarTask).configure {
+    addNestedDependencies = false
+    inputFile.set(tasks.named('jar', Jar).flatMap { it.archiveFile })
+}

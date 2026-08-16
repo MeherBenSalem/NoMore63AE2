@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 * **Fabric mixin target mismatch** — `BasicCellInventoryCreateMixin` no longer pins a Mojang-named `ItemStack` method descriptor with `remap = false`. Fabric AE2 ships with intermediary (`net.minecraft.class_1799`), so the old selector never matched and crashed on mixin apply. The injector now selects `createInventory` by name only, which works on Fabric, Forge, and NeoForge.
+* **1.21.1 Fabric empty remapJar** — Loom was emitting an empty intermediary jar. `remapJar` now remaps the real `jar` output with nested dependencies disabled, and Fabric Loom is aligned to `1.9-SNAPSHOT`.
 
 ## 0.1.1
 
