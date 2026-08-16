@@ -1,5 +1,14 @@
 # No More 63 AE2 — Changelog
 
+## 0.1.3
+
+### Bug Fixes
+* **Fabric mixin target mismatch** — `BasicCellInventoryCreateMixin` selects `createInventory` by name, avoiding the Mojang-named `ItemStack` descriptor that cannot match Fabric's intermediary runtime mappings.
+* **1.21.1 Fabric release jar** — `remapJar` uses the populated development jar as its input so the distributed jar contains the mod classes and resources.
+
+### Distribution
+* Each Minecraft version and loader is published as its own Modrinth version and CurseForge file from the local release script.
+
 ## 0.1.2
 
 ### Bug Fixes
