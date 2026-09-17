@@ -4,10 +4,17 @@
 
 ### Bug Fixes
 * **Fabric mixin target mismatch** — `BasicCellInventoryCreateMixin` selects `createInventory` by name, avoiding the Mojang-named `ItemStack` descriptor that cannot match Fabric's intermediary runtime mappings.
-* **1.21.1 Fabric release jar** — `remapJar` uses the populated development jar as its input so the distributed jar contains the mod classes and resources.
+* **1.21.1 Fabric release jar** — `remapJar` uses the populated development jar as its input and fails the build if remapped output is near-empty, so the distributed jar contains the mod classes and resources.
+
+### Compatibility
+* Added **Minecraft 26.2** NeoForge workspace (AE2 compile dependency `26.1.11-beta`; AE2 itself is still published for 26.1.2).
+* Version-synced **1.20.1** and **1.21.1** jars to **0.1.3**.
+
+### Licensing
+* Project license switched to **Apache License 2.0**.
 
 ### Distribution
-* Each Minecraft version and loader is published as its own Modrinth version and CurseForge file from the local release script.
+* Each Minecraft version and loader is published as its own Modrinth version and CurseForge file from the local release script / publish workflow.
 
 ## 0.1.2
 

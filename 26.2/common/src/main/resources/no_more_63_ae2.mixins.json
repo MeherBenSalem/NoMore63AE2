@@ -2,9 +2,11 @@
   "required": true,
   "minVersion": "0.8.3",
   "package": "nm63ae2.mixin",
+  "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "BasicCellInventoryMixin"
+    "BasicCellInventoryCreateMixin",
+    "accessor.BasicCellInventoryAccessor"
   ],
   "client": [],
   "server": [],

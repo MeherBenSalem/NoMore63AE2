@@ -1,25 +1,12 @@
 # No More 63 AE2
 
-MultiLoader AE2 addon that replaces AE2's hardcoded **63 item types per cell** limit with a configurable value (default **4096**, range **63–65535**).
+MultiLoader Applied Energistics 2 addon that replaces AE2's hardcoded **63 item types per cell** limit with a configurable value (default **4096**, range **63–65535**).
 
-## Project layout
+## Features
 
-```
-NoMore63AE2/
-├── shared/                 # Cross-version Java sources (mixin + config)
-├── 1.20.1/                 # Minecraft 1.20.1 multiloader build
-│   ├── common/
-│   ├── fabric/
-│   ├── forge/
-│   └── neoforge/
-├── 1.21.1/                 # Minecraft 1.21.1 multiloader build
-│   ├── common/
-│   ├── fabric/
-│   ├── forge/
-│   └── neoforge/
-├── 26.1.2/                 # Reference NeoForge 26.1.2 addon (preserved)
-└── Applied-Energistics-2-main/  # AE2 dev tree (preserved)
-```
+- Configurable item-type cap for AE2 item storage cells
+- Shared mixin + TOML config across Minecraft lines
+- Fabric / Forge / NeoForge on 1.20.1 and 1.21.1; NeoForge on 26.2
 
 ## Supported versions
 
@@ -27,34 +14,22 @@ NoMore63AE2/
 |-----------|--------|-------|----------|----------------|
 | 1.20.1    | Yes    | Yes   | Yes      | 15.4.10+ (Fabric: `>=15.4.10`) |
 | 1.21.1    | Yes    | Yes   | Yes      | 19.2.17+ (Fabric: `>=19.2.17`) |
+| 26.2      | —      | —     | Yes      | 26.1.11-beta+ |
 
-## Build requirements
+**Note:** Official AE2 is still published for Minecraft **26.1.2**. The 26.2 NeoForge jar compiles against AE2 `26.1.11-beta` and will only run in-game once AE2 itself ships a matching 26.2 build.
 
-- **Java 17** toolchain for `1.20.1/` (Gradle auto-provisions via Foojay)
-- **Java 21** toolchain for `1.21.1/`
-- Run Gradle with **JDK 21** or **JDK 17** (not Java 26 — Gradle/plugins are incompatible with Java 26 on this setup)
+## Requirements
 
-```powershell
-# Example: point JAVA_HOME at JDK 21 before building
-$env:JAVA_HOME = "C:\path\to\jdk-21"
+- **JDK 21** (or 17) to run Gradle for `1.20.1/` and `1.21.1/` (toolchains provision the correct Java)
+- **JDK 25** for `26.2/`
+- Do not run these Gradle builds with an unsupported bleeding-edge JDK that Gradle plugins reject
 
-cd 1.20.1
-.\gradlew build
+## Installation
 
-cd ..\1.21.1
-.\gradlew build
-```
-
-## Output JARs
-
-Mod JARs are written to each loader's `build/libs/` directory, named:
-
-`no-more-63-ae2-<minecraft>-<loader>-<modVersion>.jar`
-
-Examples:
-
-- `1.20.1/fabric/build/libs/no-more-63-ae2-1.20.1-fabric-0.1.0.jar`
-- `1.21.1/neoforge/build/libs/no-more-63-ae2-1.21.1-neoforge-0.1.0.jar`
+1. Install Applied Energistics 2 for your Minecraft version and loader.
+2. Drop the matching `no-more-63-ae2-<minecraft>-<loader>-<version>.jar` into `mods/`.
+3. Start the game once; edit `config/no_more_63_ae2.toml` if you want a different type limit.
+4. Restart after changing the config (no hot-reload).
 
 ## Configuration
 
@@ -67,17 +42,50 @@ File: `config/no_more_63_ae2.toml`
 maxItemTypesPerCell = 4096
 ```
 
-The active value is logged on startup. Config changes require a restart (no hot-reload).
+## Building
+
+```powershell
+# 1.20.1 and 1.21.1 (use JDK 21 for the Gradle JVM)
+$env:JAVA_HOME = "C:\path\to\jdk-21"
+cd 1.20.1
+.\gradlew.bat build
+cd ..\1.21.1
+.\gradlew.bat build
+
+# 26.2 NeoForge (use JDK 25)
+$env:JAVA_HOME = "C:\path\to\jdk-25"
+cd ..\26.2
+.\gradlew.bat build
+```
+
+Mod JARs are written to each loader's `build/libs/` directory:
+
+`no-more-63-ae2-<minecraft>-<loader>-<modVersion>.jar`
+
+## Project layout
+
+```
+NoMore63AE2/
+├── shared/     # Cross-version mixin + TOML config
+├── 1.20.1/     # Fabric, Forge, NeoForge
+├── 1.21.1/     # Fabric, Forge, NeoForge
+└── 26.2/       # NeoForge only
+```
 
 ## AE2 patch
 
 - **Class:** `appeng.me.cells.BasicCellInventory`
-- **Mixin:** `nm63ae2.mixin.BasicCellInventoryCreateMixin` (patches `BasicCellInventory.createInventory` after construction)
-- **Injection:** `@Inject(method = "createInventory", at = @At("RETURN"))` — after AE2 constructs and clamps types to 63, then recompute equal-distribution if needed
+- **Mixin:** `nm63ae2.mixin.BasicCellInventoryCreateMixin` (patches `createInventory` after construction)
 - **Scope:** Item storage cells only (`AEKeyType.items()`); fluid/other cells unchanged
 
-## Known limitations
+## Contributing
 
-- **1.20.1 NeoForge** is built with the legacy Forge 1.20.1 toolchain (binary-compatible with NeoForge 1.20.1) and ships `neoforge.mods.toml` metadata.
-- **1.20.1 AE2** is resolved from [Modmaven](https://modmaven.dev/) (`appeng:appliedenergistics2-*`) because 15.x is not published to Maven Central.
-- **`26.1.2/`** remains a separate NeoForge-only reference using `ModConfigSpec` instead of the shared TOML config.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+See [.github/SECURITY.md](.github/SECURITY.md).
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE).

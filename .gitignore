@@ -2,6 +2,7 @@
 .gradle/
 **/build/
 **/run/
+**/runs/
 **/out/
 **/bin/
 .idea/
@@ -23,6 +24,7 @@ Thumbs.db
 Applied-Energistics-2-main/
 
 # Release staging / secrets
+releases/
 secrets/
 *.env
 local.env
@@ -31,3 +33,5 @@ local.env
 *.tmp
 *.bak
 *~
+dump.gradle
+tmpDump.gradle

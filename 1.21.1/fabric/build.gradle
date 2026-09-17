@@ -53,4 +53,10 @@ loom {
 tasks.named('remapJar', net.fabricmc.loom.task.RemapJarTask).configure {
     addNestedDependencies = false
     inputFile.set(tasks.named('jar', Jar).flatMap { it.archiveFile })
+    doLast {
+        def out = archiveFile.get().asFile
+        if (out.length() < 1024) {
+            throw new GradleException("remapJar produced an empty/near-empty jar (${out.length()} bytes)")
+        }
+    }
 }

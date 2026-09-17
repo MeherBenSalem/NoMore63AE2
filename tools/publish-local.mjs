@@ -15,23 +15,29 @@ if (!version || (modrinthOnly && curseForgeOnly)) {
 }
 
 function loadLocalEnvironment() {
-  const envFile = path.join(os.homedir(), 'Desktop', 'local.env');
-  if (!fs.existsSync(envFile)) {
-    return;
-  }
+  const candidates = [
+    path.join(os.homedir(), 'NightBeam-Knowledge-Base', 'secrets', 'local.env'),
+    path.join(os.homedir(), 'Desktop', 'local.env'),
+  ];
 
-  for (const line of fs.readFileSync(envFile, 'utf8').split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) {
+  for (const envFile of candidates) {
+    if (!fs.existsSync(envFile)) {
       continue;
     }
-    const equals = trimmed.indexOf('=');
-    if (equals <= 0) {
-      continue;
-    }
-    const name = trimmed.slice(0, equals).trim();
-    if (!process.env[name]) {
-      process.env[name] = trimmed.slice(equals + 1).trim();
+
+    for (const line of fs.readFileSync(envFile, 'utf8').split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) {
+        continue;
+      }
+      const equals = trimmed.indexOf('=');
+      if (equals <= 0) {
+        continue;
+      }
+      const name = trimmed.slice(0, equals).trim();
+      if (!process.env[name]) {
+        process.env[name] = trimmed.slice(equals + 1).trim();
+      }
     }
   }
 }
@@ -68,6 +74,7 @@ const targets = [
   { minecraft: '1.21.1', loader: 'fabric' },
   { minecraft: '1.21.1', loader: 'forge' },
   { minecraft: '1.21.1', loader: 'neoforge' },
+  { minecraft: '26.2', loader: 'neoforge' },
 ];
 
 function findJar(target) {
