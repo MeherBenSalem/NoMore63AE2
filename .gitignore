@@ -35,3 +35,9 @@ local.env
 *~
 dump.gradle
 tmpDump.gradle
+
+build/
+out/
+target/
+run/
+runs/
