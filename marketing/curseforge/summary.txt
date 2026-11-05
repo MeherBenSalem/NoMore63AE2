@@ -1,1 +1,1 @@
-Remove AE2’s default limit of 63 unique item types per ME item storage cell and replace it with a custom configurable limit.
+Raise Applied Energistics 2's limit of 63 item types per storage cell to a number you set in the config.
