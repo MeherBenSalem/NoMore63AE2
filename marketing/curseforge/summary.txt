@@ -1,0 +1,1 @@
+Remove AE2’s default limit of 63 unique item types per ME item storage cell and replace it with a custom configurable limit.
