@@ -1,4 +1,4 @@
-**[Discord](https://discord.gg/TJc3CxR4jK) · [The modpack](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy) · [Support NightBeam](https://nightbeam.dev/support) · [NightBeam Pro](https://nightbeam.dev/memberships) · [All projects](https://nightbeam.dev/projects)**
+**[Discord](https://discord.gg/TJc3CxR4jK)**
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Fuzss/modresources/main/pages/commons/headers/about.png" alt="About">
@@ -83,10 +83,6 @@ Change `maxItemTypesPerCell` to the number of unique item types you want AE2 ite
 # Requirements
 
 * **Applied Energistics 2**
-
-<p align="center">
-  <a href="https://nightbeam.dev/community"><img src="https://i.imgur.com/xrZhnWD.png" alt="Join the Nightbeam Community"></a>
-</p>
 
 ---
 
