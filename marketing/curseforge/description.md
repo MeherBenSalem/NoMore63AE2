@@ -1,4 +1,4 @@
-**[Discord](https://discord.gg/TJc3CxR4jK)**
+**[Docs](https://nightbeam.dev/docs/no-more-63-ae2) · [Discord](https://discord.gg/TJc3CxR4jK)**
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Fuzss/modresources/main/pages/commons/headers/about.png" alt="About">
