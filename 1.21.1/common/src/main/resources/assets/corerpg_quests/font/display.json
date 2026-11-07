@@ -1,0 +1,16 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "corerpg_quests:cinzel.ttf",
+      "shift": [0.0, 0.5],
+      "size": 9.5,
+      "oversample": 3.0,
+      "skip": ""
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:default"
+    }
+  ]
+}

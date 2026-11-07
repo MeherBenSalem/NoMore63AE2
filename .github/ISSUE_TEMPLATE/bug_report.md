@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a problem with No More 63 AE2
+about: Report a problem with Core RPG - Quests Engine
 title: "[Bug] "
 labels: bug
 ---
@@ -8,10 +8,10 @@ labels: bug
 **Minecraft / loader / mod version**
 - Minecraft:
 - Loader:
-- No More 63 AE2:
-- Applied Energistics 2:
+- Core RPG - Quests Engine:
+- Fabric API (Fabric only):
 
-**What happened**
+**What happened** (for quest problems, attach the relevant files from config/corerpg_quests/book/)
 
 
 **What you expected**

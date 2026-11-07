@@ -1,1 +1,1 @@
-Raise Applied Energistics 2's limit of 63 item types per storage cell to a number you set in the config.
+A complete RPG quest system: a quest book with branching chapters, an in-game editor, parties with shared progress, team stages, smart item filters and vein mining.

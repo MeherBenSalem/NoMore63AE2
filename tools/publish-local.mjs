@@ -47,8 +47,16 @@ loadLocalEnvironment();
 const modrinthToken = process.env.MODRINTH_TOKEN;
 const curseForgeToken = process.env.CURSEFORGE_TOKEN;
 const curseForgeApiKey = process.env.CURSEFORGE_API_KEY;
-const modrinthId = process.env.MODRINTH_ID || 'ywtf09FK';
-const curseForgeId = process.env.CURSEFORGE_ID || '1585209';
+// Deliberately no defaults: this repository used to publish No More 63 AE2, and its old project ids must never be
+// reused for Core RPG - Quests Engine. Set both ids for the new projects in local.env.
+const modrinthId = process.env.CORERPG_QUESTS_MODRINTH_ID;
+const curseForgeId = process.env.CORERPG_QUESTS_CURSEFORGE_ID;
+if (!curseForgeOnly && !modrinthId) {
+  throw new Error('CORERPG_QUESTS_MODRINTH_ID is not set (the Modrinth project id of Core RPG - Quests Engine)');
+}
+if (!modrinthOnly && !curseForgeId) {
+  throw new Error('CORERPG_QUESTS_CURSEFORGE_ID is not set (the CurseForge project id of Core RPG - Quests Engine)');
+}
 
 if (!curseForgeOnly && !modrinthToken) {
   throw new Error('MODRINTH_TOKEN is not set');
@@ -68,14 +76,13 @@ function savePublishState() {
 }
 
 const targets = [
-  { minecraft: '1.20.1', loader: 'fabric' },
-  { minecraft: '1.20.1', loader: 'forge' },
-  { minecraft: '1.20.1', loader: 'neoforge' },
   { minecraft: '1.21.1', loader: 'fabric' },
-  { minecraft: '1.21.1', loader: 'forge' },
   { minecraft: '1.21.1', loader: 'neoforge' },
-  { minecraft: '26.2', loader: 'neoforge' },
 ];
+
+// Fabric API on Modrinth / CurseForge; the Fabric jar needs it.
+const FABRIC_API_MODRINTH = 'P7dR8mSH';
+const FABRIC_API_CURSEFORGE = 'fabric-api';
 
 function findJar(target) {
   const libs = path.join(repo, target.minecraft, target.loader, 'build', 'libs');
@@ -146,7 +153,9 @@ async function publishModrinth(release, existing) {
     name: modrinthVersionName(release),
     version_number: versionNumber,
     changelog,
-    dependencies: [],
+    dependencies: release.loader === 'fabric'
+      ? [{ project_id: FABRIC_API_MODRINTH, dependency_type: 'required' }]
+      : [],
     game_versions: [release.minecraft],
     version_type: 'release',
     loaders: [release.loader],
@@ -216,7 +225,7 @@ async function publishCurseForge(release, versions, existingFiles) {
   const metadata = {
     changelog,
     changelogType: 'markdown',
-    displayName: `No More 63 AE2 ${version} · ${release.loader} · ${release.minecraft}`,
+    displayName: `Core RPG - Quests Engine ${version} · ${release.loader} · ${release.minecraft}`,
     gameVersions: [
       curseForgeVersionId(versions, release.minecraft),
       curseForgeVersionId(versions, curseForgeLoaderName(release.loader), 68441),
@@ -225,6 +234,9 @@ async function publishCurseForge(release, versions, existingFiles) {
     ],
     releaseType: 'release',
   };
+  if (release.loader === 'fabric') {
+    metadata.relations = { projects: [{ slug: FABRIC_API_CURSEFORGE, type: 'requiredDependency' }] };
+  }
   const form = new FormData();
   form.append('metadata', JSON.stringify(metadata));
   form.append('file', new Blob([fs.readFileSync(release.jar)]), filename);

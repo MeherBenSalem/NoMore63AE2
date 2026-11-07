@@ -3,10 +3,6 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
-def sharedDir = file("${rootDir}/../shared")
-
-sourceSets.main.java.srcDir("${sharedDir}/src/main/java")
-
 neoForge {
     neoFormVersion = neo_form_version
     def at = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -17,14 +13,27 @@ neoForge {
         minecraftVersion = parchment_minecraft
         mappingsVersion = parchment_version
     }
+    // Unit tests run against the vanilla classes (Minecraft is bootstrapped in the tests that need registries).
+    addModdingDependenciesTo(sourceSets.test)
 }
 
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-    api 'com.electronwill.night-config:toml:3.8.3'
-    compileOnly "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    maxHeapSize = '2g'
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+    }
 }
 
 configurations {
@@ -39,6 +48,6 @@ configurations {
 }
 
 artifacts {
-    commonJava new File(sharedDir, 'src/main/java')
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
     commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }

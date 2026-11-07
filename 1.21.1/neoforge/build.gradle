@@ -5,7 +5,6 @@ plugins {
 
 neoForge {
     version = neoforge_version
-    // Automatically enable neoforge AccessTransformers if the file exists
     def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
         accessTransformers.from(at.absolutePath)
@@ -17,21 +16,34 @@ neoForge {
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
-            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})"
         }
         client {
             client()
-        }
-        data {
-            data()
-
-            // DataGen can be run by - "./gradlew :neoforge:runData" in Terminal.
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-
+            gameDirectory = project.file('runs/client')
         }
         server {
             server()
+            gameDirectory = project.file('runs/server')
+            programArgument('--nogui')
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            gameDirectory = project.file('runs/gametest')
+        }
+        // QA: a server that generates a world and stops itself, and a client that opens it and runs a script
+        // (-PqaScript="wait:60;open:;screenshot:book;quit"). See ClientQa.
+        qaServer {
+            server()
+            gameDirectory = project.file('runs/qa-server')
+            programArgument('--nogui')
+            systemProperty('corerpg_quests.qa.stop_after_ticks', '300')
+        }
+        qaClient {
+            client()
+            gameDirectory = project.file('runs/qa')
+            systemProperty('corerpg_quests.qa.script', (project.findProperty('qaScript') ?: '').toString())
+            programArguments.addAll('--quickPlaySingleplayer', 'qa', '--width', '1920', '--height', '1080')
         }
     }
     mods {
@@ -42,12 +54,3 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
-
-dependencies {
-    compileOnly "org.appliedenergistics:appliedenergistics2:${ae2_version}"
-    localRuntime "org.appliedenergistics:appliedenergistics2:${ae2_version}"
-}

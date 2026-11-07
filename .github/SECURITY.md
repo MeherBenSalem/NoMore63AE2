@@ -22,7 +22,7 @@ Use GitHub's private vulnerability reporting or a private GitHub security
 advisory for sensitive reports. Include:
 
 - affected version root and loader
-- AE2 version if relevant
+- The relevant quest book files (config/corerpg_quests/book/) if relevant
 - reproduction steps or proof of concept
 - expected impact
 - any logs or stack traces that help confirm the issue

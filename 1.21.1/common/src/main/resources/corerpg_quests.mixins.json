@@ -1,0 +1,35 @@
+{
+  "required": true,
+  "minVersion": "0.8.3",
+  "package": "dev.nightbeam.corerpg.quests.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BlockItemMixin",
+    "BlockMixin",
+    "BredAnimalsTriggerMixin",
+    "BucketItemAccessor",
+    "ChangeDimensionTriggerMixin",
+    "ConsumeItemTriggerMixin",
+    "EnchantedItemTriggerMixin",
+    "FishingRodHookedTriggerMixin",
+    "InventoryChangeTriggerMixin",
+    "InventoryMixin",
+    "ItemStackMixin",
+    "KilledTriggerMixin",
+    "MinecraftServerMixin",
+    "PlayerAdvancementsMixin",
+    "PlayerMixin",
+    "ServerPlayerGameModeMixin",
+    "ServerPlayerMixin",
+    "TameAnimalTriggerMixin",
+    "TradeTriggerMixin"
+  ],
+  "client": [
+    "client.MouseHandlerMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

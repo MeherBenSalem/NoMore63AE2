@@ -1,88 +1,160 @@
-**[Docs](https://nightbeam.dev/docs/no-more-63-ae2) · [Discord](https://discord.gg/TJc3CxR4jK)**
+![Core RPG - Quests Engine 1.0: The First Ember](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/banner.png)
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Fuzss/modresources/main/pages/commons/headers/about.png" alt="About">
-</p>
+**[Book format](https://github.com/MeherBenSalem/NoMore63AE2/blob/main/docs/BOOK_FORMAT.md) · [Discord](https://discord.gg/TJc3CxR4jK) · [Source and issues](https://github.com/MeherBenSalem/NoMore63AE2)**
 
-<p align="center">
-  <img src="https://i.imgur.com/uM9E074.png" alt="No More 63 AE2" width="500">
-</p>
+## A quest book for RPG modpacks
 
-<p align="center">
-  <strong>No More 63 AE2</strong> is a lightweight addon for <strong>Applied Energistics 2</strong> that removes the default <strong>63 unique item type limit</strong> from AE2 item storage cells and replaces it with a configurable limit. Increase the number of unique item types your storage cells can hold while keeping normal AE2 storage behavior intact.
-</p>
+Write a story in chapters, branch it, lock paths behind choices, and let your players walk it together. **Core RPG - Quests Engine** is one mod with everything a quest-driven pack needs: the quest book and its **in-game editor**, **teams and parties** with shared progress, **team stages**, **smart item filters** and **vein mining**. It covers what the FTB Quests suite does, in original code, with an RPG look of its own.
 
-# Features
+**1.0 "The First Ember"** is available for **NeoForge and Fabric** on **1.21.1**. A small example book, *The First Ember*, is written to your config the first time a server starts, so you can see every feature at work.
 
-| Feature | Description |
-| --- | --- |
-| Removes the 63-Type Limit | Removes AE2's default limit of 63 unique item types per item storage cell |
-| Configurable Type Limit | Choose how many unique item types an AE2 item storage cell can hold |
-| AE2 Storage Behavior | Keeps normal Applied Energistics 2 storage behavior intact |
-| Storage Bytes Unchanged | Does not modify storage bytes or total item counts |
-| Channels Unchanged | Does not modify AE2 channel behavior |
-| Autocrafting Unchanged | Does not alter AE2 autocrafting |
-| Addon Design | Works as an addon rather than a fork of Applied Energistics 2 |
-| Lightweight | Small and focused on changing the unique item type limit |
-| Compatibility Focused | Designed to preserve existing AE2 systems while changing just the type cap |
+![divider](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/divider.png)
 
-# Remove the 63-Type Limit
+![The Quest Book](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-book.png)
 
-By default, Applied Energistics 2 item storage cells hold no more than **63 different item types**.
+![Every path on one map](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-book.png)
 
-No More 63 AE2 removes that restriction and replaces it with a configurable limit.
+Press **J** (or use the Quest Book item). Chapters sit on the left in collapsible groups; each chapter is a canvas of quests you can **pan and zoom**.
 
-This allows storage cells to handle more unique items without changing the fundamental way AE2 storage works.
+- **Read it at a glance.** Lines between quests show what is locked, ready (animated), underway, waiting to be claimed and done.
+- **Shape it.** Circles, squares, diamonds, hexagons, hearts, gears, shields, stars and more, at any size. Link a quest into another chapter, and decorate chapters with clickable images.
+- **Find it.** Search the whole book with **Ctrl + F**. Pin quests to the tracker on your screen.
 
-# Configurable Storage Cells
+![Every quest tells a story](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-quest.png)
 
-Instead of forcing a fixed replacement limit, No More 63 AE2 lets you configure how many unique item types an AE2 item storage cell can hold.
+Open a quest to read its story, with **colours, page breaks and inline images**, and see its tasks with live progress, **hand-in** buttons and its rewards. The panel also shows what the quest needs and what it unlocks next.
 
-For example, the limit can be increased from AE2's default **63** to **4096** unique item types.
+![Progression](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-progression.png)
 
-# What Stays Unchanged
+![Branches and secrets](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-progression.png)
 
-No More 63 AE2 is focused specifically on the unique item type limit.
+- **Dependencies** on quests or whole chapters: all of them, any of them, all started, any started, or **N of these**.
+- **Branching choices.** Let a quest allow only one of its follow-ups: pick a path and the others close.
+- **Secrets.** Invisible quests, quests that appear after N tasks, quests hidden until their dependencies are done or visible, hidden text, hidden details.
+- **Pacing.** Linear or flexible progression, sequential tasks, optional tasks and quests, repeatable quests with cooldowns, completion commands.
+- **Control.** Lock a team's progress or block its rewards with one command.
 
-It does **not** change:
+![Tasks & Rewards](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-tasks.png)
 
-* Storage bytes
-* Total item counts
-* Channels
-* Autocrafting
-* Normal AE2 storage behavior
+![Any task. Any reward.](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-tasks.png)
 
-The mod works as an **addon**, not a fork of Applied Energistics 2.
+**24 task types**: item (have it or hand it in, with smart filters and component matching), checkmark, kill (type, tag or a named boss), advancement (or one criterion), location, dimension, biome, structure, stat, experience, observation, interaction, stage, custom, fluid, break block, place block, craft, consume, fish, trade, breed, tame and enchant. Everything is detected **on the server** through Minecraft's own triggers, so it behaves the same on NeoForge and Fabric.
 
-# Configuration
+![Rewards worth the journey](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-rewards.png)
 
-The item type limit can be changed in the mod config file.
+**12 reward types**: items (with a random bonus), experience points or levels, a random roll from a reward table, a **choice** of one entry, everything in a table, vanilla loot tables, commands, advancements, story toasts, team stages and custom rewards for scripts.
 
-Example:
+- Rewards are claimed by each player, or **once for the whole team**.
+- Auto-claim them, silently or invisibly, or leave them out of "claim all".
+- Turn a reward table into a **loot crate** that monsters, animals and bosses can drop.
 
-```toml
-# No More 63 AE2 config
-# Controls how many unique item types an AE2 item storage cell can hold.
-# AE2 default is 63.
-maxItemTypesPerCell = 4096
-```
+![The Editor](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-editor.png)
 
-Change `maxItemTypesPerCell` to the number of unique item types you want AE2 item storage cells to support.
+![Build it in game](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-editor.png)
 
-# Why Choose No More 63 AE2?
+Operators click the pencil and the book becomes its own editor:
 
-1. **Remove the 63-Type Restriction** — Store more unique item types in each AE2 item storage cell.
-2. **Fully Configurable** — Choose the type limit that fits your storage setup.
-3. **Focused Modification** — Changes the item type cap without redesigning AE2 storage.
-4. **Storage Bytes Stay Intact** — Capacity and item-count mechanics remain unchanged.
-5. **Channels Stay Intact** — Existing AE2 network channel behavior is preserved.
-6. **Autocrafting Stays Intact** — The addon does not interfere with AE2 autocrafting.
-7. **Addon, Not a Fork** — Extends Applied Energistics 2 rather than replacing it.
-8. **Lightweight** — A small, focused addon for players who simply want more than 63 types.
+- **Right-click** the canvas to add quests, quest links and images; right-click a quest to add tasks and rewards.
+- **Drag** to move (snapped to the grid), **Shift**-click or Shift-drag to select, **Ctrl**-click to link dependencies, **Ctrl + C / V** to copy and paste.
+- **Every field** of every task and reward is editable, in an editor generated from each object's definition, with a text editor that previews colours and pages.
+- Reward tables, chapter groups, chapter order and book settings, all in game. **Complete** or **reset** anything for your team to test it.
+- Every change reaches every player at once.
 
-# Requirements
+![Teams & Parties](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-teams.png)
 
-* **Applied Energistics 2**
+![Adventure together](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-teams.png)
+
+- Everyone has a personal team. **Parties** share quest progress, stages and team rewards.
+- Owner, officers, members, **allies** and **invites**; free-to-join parties, team chat, a colour and a description; a size limit set by the server.
+- **Server teams** for factions and events, and **team stages** that quests, commands and other mods can read and set.
+- Manage it all from the team screen or the `/team` command.
+
+![Smart Filters](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-filters.png)
+
+![Any ingot. Any blade.](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-filters.png)
+
+One item task can accept a whole family of items with a readable filter, such as `any(#c:ingots, #c:gems)` or `all(@create, not(block()))`. Filters cover items, tags, mods, food, durability, stack size, names, components, enchantments and rarity. Type one into a task, or carry it on a **Smart Filter** item, whose editor checks the filter as you type and previews every item it matches.
+
+![Vein Mining](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-vein.png)
+
+![Take the whole vein](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-vein.png)
+
+Hold **`** and break a block: the connected vein comes with it, outlined before you swing. Scroll while holding the key to switch shape: **shapeless, 1x1 tunnel, 1x2 tunnel, 3x3 tunnel, 3x3 square** or an **escape staircase**.
+
+- Hunger and experience costs, a cooldown, a block limit, tool-break protection and correct-tool rules, all in `server.toml`.
+- Deepslate and stone variants of an ore count as one vein (`c:ores/*` merge tags). Drops gather at the first block.
+- With the key held, **right-click** to harvest and replant a field, strip a tree, make a path or till the soil.
+
+![divider](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/divider.png)
+
+![For Modpacks](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-modpacks.png)
+
+![Plain JSON, ready for git](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-files.png)
+
+- The book lives in `config/corerpg_quests/book/`: one readable JSON file per chapter and reward table, easy to diff, review and generate with tools.
+- Readable ids such as `act1/kindle`. Text supports colour codes and translation keys.
+- Every field is documented in the **[book format reference](https://github.com/MeherBenSalem/NoMore63AE2/blob/main/docs/BOOK_FORMAT.md)**, generated from the source.
+- Items, tasks and rewards from mods you remove are kept as placeholders, not deleted.
+
+![Never lose the thread](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-hud.png)
+
+![Everything Else](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-everything.png)
+
+- **Pinned-quest tracker** in any corner, and toasts for quests, chapters, the whole book and rewards received.
+- **The quest book stays with you** after death, and the book can hand out **emergency items** on a cooldown.
+- **Commands** for operators: complete or reset quests, chapters or the whole book for a team, give and remove stages, progress custom tasks from command blocks and datapacks, reload and export the book.
+- **Events and an API** for addons and scripts: quest started and completed, task and chapter completed, reward claimed, custom rewards, stage and team changes. Register your own task, reward and filter types.
+- **Settings** for the server (parties, editor permission, every vein-mining rule) and for each player (tracker corner and size, toasts, sounds, the outline preview, fonts).
+
+![Downloads & Compatibility](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-compatibility.png)
+
+| Minecraft | Loaders | Also install |
+| --- | --- | --- |
+| 1.21.1 | NeoForge, Fabric | Fabric API (Fabric) |
+
+- Download the file whose name matches your loader: `-neoforge-` or `-fabric-`.
+- Install it on **both the server and every client**, at the same version.
+- Use it **instead of** FTB Quests and FTB Ultimine, not alongside them.
+- It is a mod. It does not work as a Paper, Spigot or Folia plugin.
+
+![Questions](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-faq.png)
+
+**Can I bring my FTB Quests book over?**
+Not automatically yet. The book format is different (plain JSON instead of SNBT); it is fully documented and easy to generate with a script. Quest blocks (task screens, barriers, detectors), energy tasks and the KubeJS and JEI integrations are not part of 1.0.
+
+**Do players need the mod?**
+Yes. The quest book, the editor and the vein-mining preview run on the client.
+
+**Is progress per player or per team?**
+Per team. Every player starts with a personal team; joining a party shares that party's progress.
+
+**Can other mods or scripts drive quests?**
+Yes. Custom tasks and rewards, team stages and commands work with command blocks, datapacks and scripts, and the Java API exposes events and lets you register new task, reward and filter types.
+
+**Is it heavy?**
+Most tasks react to events instead of polling. Location-style tasks are checked every second by default (`detection_delay`), spread across players, and only for quests a team can progress.
+
+![Gallery](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/header-gallery.png)
+
+![The quest book](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/screenshots/book.jpg)
+
+![A quest ready to claim](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/screenshots/panel-claim.jpg)
+
+![A branching chapter](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/screenshots/chapter.jpg)
+
+![The editor](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/screenshots/editor.jpg)
+
+![The team screen](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/screenshots/team.jpg)
+
+![Vein mining preview](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/screenshots/vein.jpg)
+
+---
+
+Core RPG - Quests Engine is licensed under Apache-2.0. The bundled Cinzel and EB Garamond fonts are licensed under the SIL Open Font License 1.1. Core RPG - Quests Engine is an independent project and is not affiliated with Feed The Beast or any mod it takes inspiration from.
+
+---
+
+> **Play it in [Remnants: Ashen Legacy](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy)**, NightBeam's story-driven soulslike RPG modpack.
 
 ---
 

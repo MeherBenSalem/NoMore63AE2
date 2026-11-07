@@ -1,36 +1,29 @@
-# No More 63 AE2 — Changelog
+# Core RPG - Quests Engine — Changelog
 
-## 0.1.3
+## 1.0.0
 
-### Bug Fixes
-* **Fabric mixin target mismatch** — `BasicCellInventoryCreateMixin` selects `createInventory` by name, avoiding the Mojang-named `ItemStack` descriptor that cannot match Fabric's intermediary runtime mappings.
-* **1.21.1 Fabric release jar** — `remapJar` uses the populated development jar as its input and fails the build if remapped output is near-empty, so the distributed jar contains the mod classes and resources.
+First release, for Minecraft 1.21.1 on NeoForge and Fabric. This repository previously held No More 63 AE2, which is
+retired; its history stays in git.
 
-### Compatibility
-* Added **Minecraft 26.2** NeoForge workspace (AE2 compile dependency `26.1.11-beta`; AE2 itself is still published for 26.1.2).
-* Version-synced **1.20.1** and **1.21.1** jars to **0.1.3**.
+### Quest book
+* Chapters and chapter groups, quest canvas with pan, zoom, 11 node shapes, dependency lines that show state,
+  quest links between chapters and decorative, clickable chapter images.
+* Quest panel with paged story text, inline images, tasks, rewards, choice rewards, requirements and unlocks.
+* Search, pinned-quest HUD tracker, toasts, emergency items, quest book item kept on death.
 
-### Licensing
-* Project license switched to **Apache License 2.0**.
+### Progression
+* Quest and chapter dependencies with all/any/started modes and "N of", linear and flexible progression,
+  sequential and optional tasks, optional and repeatable quests with cooldowns, branching choices, visibility rules,
+  completion commands, progress locking and reward blocking.
+* 24 task types and 12 reward types; reward tables with random, choice and all modes; loot crates that mobs drop.
 
-### Distribution
-* Each Minecraft version and loader is published as its own Modrinth version and CurseForge file from the local release script / publish workflow.
+### Editor
+* In-game editing for operators: create, move, select, copy/paste and delete; dependency linking; a property editor
+  generated from each object's schema; text editor with formatting and preview; reward table editor.
+* Books are plain JSON in `config/corerpg_quests/book/`, one file per chapter and reward table.
 
-## 0.1.2
-
-### Bug Fixes
-* **Fabric mixin target mismatch** — `BasicCellInventoryCreateMixin` no longer pins a Mojang-named `ItemStack` method descriptor with `remap = false`. Fabric AE2 ships with intermediary (`net.minecraft.class_1799`), so the old selector never matched and crashed on mixin apply. The injector now selects `createInventory` by name only, which works on Fabric, Forge, and NeoForge.
-* **1.21.1 Fabric empty remapJar** — Loom was emitting an empty intermediary jar. `remapJar` now remaps the real `jar` output with nested dependencies disabled, and Fabric Loom is aligned to `1.9-SNAPSHOT`.
-
-## 0.1.1
-
-### Bug Fixes
-* **Fabric AE2 dependency mismatch** — `fabric.mod.json` no longer uses Maven interval ranges like `[15.4.10,16.0.0)`, which Fabric Loader could reject even when AE2 `15.4.10` was installed. Fabric now depends on `>=15.4.10` (1.20.1) / `>=19.2.17` (1.21.1). Forge/NeoForge keep Maven intervals in `mods.toml`.
-
-### Improvements
-* Root `.gitignore` (excludes vendored AE2 tree, `.jdk21/`, build outputs).
-* MultiLoader jars published for Fabric / Forge / NeoForge on 1.20.1 and Fabric / NeoForge on 1.21.1.
-
-## 0.1.0
-
-* Initial configurable item-type limit for AE2 storage cells (default 4096).
+### Teams, stages, filters, vein mining
+* Personal teams, parties (owner, officers, members, allies, invites, free to join), server teams, team chat,
+  shared progress and team stages; team screen and `/team` commands.
+* Smart filter language and Smart Filter item with an editor and live preview.
+* Vein mining with six shapes, limits and costs, merge tags, drop gathering, crop harvesting and area tools.

@@ -10,8 +10,8 @@
 #   CURSEFORGE_API_KEY
 #
 # Repo variables:
-#   MODRINTH_ID
-#   CURSEFORGE_ID
+#   CORERPG_QUESTS_MODRINTH_ID   (the Core RPG - Quests Engine project; NOT the old No More 63 AE2 MODRINTH_ID)
+#   CORERPG_QUESTS_CURSEFORGE_ID (the Core RPG - Quests Engine project; NOT the old No More 63 AE2 CURSEFORGE_ID)
 #   DEFAULT_LOADER (optional; e.g. paper for plugins when jar name has no loader)
 #   DEFAULT_GAME_VERSION (optional; e.g. 1.21.1 when jar name has no MC version)
 #
@@ -97,7 +97,7 @@ jobs:
         run: |
           set -euo pipefail
           built=0
-          for ws in 1.20.1 1.21.1 26.2; do
+          for ws in 1.21.1; do
             if [ -f "$ws/gradlew" ] || [ -f "$ws/settings.gradle" ] || [ -f "$ws/settings.gradle.kts" ]; then
               echo "Building workspace $ws"
               (
@@ -165,8 +165,8 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          MODRINTH_ID: ${{ vars.MODRINTH_ID }}
-          CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID }}
+          MODRINTH_ID: ${{ vars.CORERPG_QUESTS_MODRINTH_ID }}
+          CURSEFORGE_ID: ${{ vars.CORERPG_QUESTS_CURSEFORGE_ID }}
           VERSION: ${{ steps.ver.outputs.version }}
           JAR_LIST: ${{ steps.jars.outputs.list }}
           PLATFORMS: ${{ inputs.platforms || 'both' }}
@@ -267,7 +267,7 @@ jobs:
                   name: `${version} · ${loader} · ${gameVersions[0]}`,
                   version_number: `${version}+${loader}-${gameVersions[0]}`,
                   changelog,
-                  dependencies: [],
+                  dependencies: loader === 'fabric' ? [{ project_id: 'P7dR8mSH', dependency_type: 'required' }] : [],
                   game_versions: gameVersions,
                   version_type: 'release',
                   loaders: [loader === 'paper' ? 'paper' : loader],
@@ -347,6 +347,7 @@ jobs:
                 gameVersions,
                 releaseType: 'release',
               };
+              if (loader === 'fabric') meta.relations = { projects: [{ slug: 'fabric-api', type: 'requiredDependency' }] };
               if (gameVersionNames.length) meta.gameVersionNames = gameVersionNames;
               const cfForm = new FormData();
               cfForm.append('metadata', JSON.stringify(meta));
