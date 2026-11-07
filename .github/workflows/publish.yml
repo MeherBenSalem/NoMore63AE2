@@ -163,8 +163,8 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          MODRINTH_ID: ${{ vars.CORERPG_QUESTS_MODRINTH_ID }}
-          CURSEFORGE_ID: ${{ vars.CORERPG_QUESTS_CURSEFORGE_ID }}
+          MODRINTH_ID: ${{ vars.CORERPG_QUESTS_MODRINTH_ID || 'ywtf09FK' }}
+          CURSEFORGE_ID: ${{ vars.CORERPG_QUESTS_CURSEFORGE_ID || '1585209' }}
           VERSION: ${{ steps.ver.outputs.version }}
           JAR_LIST: ${{ steps.jars.outputs.list }}
           PLATFORMS: ${{ inputs.platforms || 'both' }}
@@ -173,7 +173,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${MODRINTH_ID:-}" && test -n "${CURSEFORGE_ID:-}"
+          if [ -z "${MODRINTH_ID:-}" ] || [ -z "${CURSEFORGE_ID:-}" ]; then
+            echo "Missing Modrinth or CurseForge project id" >&2
+            exit 1
+          fi
           node <<'NODE'
           const fs = require('fs');
           const path = require('path');
