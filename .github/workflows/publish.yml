@@ -84,9 +84,7 @@ jobs:
         if: steps.prebuilt.outputs.found != 'true'
         with:
           distribution: temurin
-          java-version: |
-            21
-            25
+          java-version: 21
 
       - uses: gradle/actions/setup-gradle@v4
         if: steps.prebuilt.outputs.found != 'true'
