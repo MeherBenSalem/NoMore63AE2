@@ -1,5 +1,11 @@
 # Core RPG - Quests Engine — Changelog
 
+## 1.0.1
+
+### Fixed
+* The chapter list of the quest book flickered when you kept scrolling after reaching its end: every wheel tick drew
+  one frame scrolled past the last chapter before snapping back. The list now stops at its end.
+
 ## 1.0.0
 
 First release, for Minecraft 1.21.1 on NeoForge and Fabric. This repository previously held No More 63 AE2, which is

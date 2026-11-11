@@ -53,6 +53,8 @@ public class QuestBookScreen extends Screen {
     private @Nullable Chapter chapter;
     private int sidebarWidth;
     private double sidebarScroll;
+    /** How far the chapter list can scroll, measured by the last frame drawn. */
+    private double sidebarMaxScroll;
     private int lastVersion = -1;
     private EditBox search;
     private final List<Quest> searchResults = new ArrayList<>();
@@ -480,6 +482,9 @@ public class QuestBookScreen extends Screen {
 
         int listBottom = listBottom();
         g.enableScissor(0, TOP, sidebarWidth - 1, listBottom);
+        // Clamp before drawing: clamping only afterwards drew one over-scrolled frame for every wheel tick past
+        // the end of the list, which made the list and its bar flicker.
+        sidebarScroll = Math.max(0, Math.min(sidebarScroll, sidebarMaxScroll));
         int y = TOP + 3 - (int) sidebarScroll;
         for (Map.Entry<ChapterGroup, List<Chapter>> entry : book.chaptersByGroup().entrySet()) {
             ChapterGroup group = entry.getKey();
@@ -506,6 +511,7 @@ public class QuestBookScreen extends Screen {
         g.disableScissor();
         int contentHeight = y + (int) sidebarScroll - TOP;
         int view = listBottom - TOP;
+        sidebarMaxScroll = Math.max(0, contentHeight - view);
         if (contentHeight > view) {
             sidebarScroll = Math.min(sidebarScroll, contentHeight - view);
             int barH = Math.max(12, view * view / contentHeight);
@@ -761,7 +767,7 @@ public class QuestBookScreen extends Screen {
             return panel.mouseScrolled(mx, my, scrollY);
         }
         if (mx < sidebarWidth) {
-            sidebarScroll = Math.max(0, sidebarScroll - scrollY * ROW * 2);
+            sidebarScroll = Math.max(0, Math.min(sidebarMaxScroll, sidebarScroll - scrollY * ROW * 2));
             return true;
         }
         return canvas.mouseScrolled(mx, my, scrollY);
