@@ -1,0 +1,39 @@
+modLoader = "javafml"
+loaderVersion = "${neoforge_loader_version_range}"
+license = "${license}"
+issueTrackerURL = "https://github.com/MeherBenSalem/NoMore63AE2/issues"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "${mod_name}"
+displayURL = "https://nightbeam.dev/docs/corerpg-quests"
+logoFile = "assets/${mod_id}/icon.png"
+credits = "${credits}"
+authors = "${mod_author}"
+description = '''${description}'''
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "ftbquests"
+type = "incompatible"
+reason = "Core RPG - Quests Engine replaces FTB Quests; use one or the other."
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"

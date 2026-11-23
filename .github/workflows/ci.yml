@@ -1,0 +1,150 @@
+# CI for Core RPG - Quests Engine (NightBeam convention; based on Modern-Building-Wands' ci.yml).
+# Builds all 8 jars (1.20.1 Fabric + Forge; 1.21.1, 26.2, 26.3 Fabric + NeoForge), one workspace per job,
+# runs each workspace's unit tests (part of `build`), checks that every workspace has the same version= and
+# that the metadata ranges stay inside their Minecraft line, checks the 8 built jar names, and runs the
+# publisher script tests (the same-day guard). It never publishes anything.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "1.20.1/**"
+      - "1.21.1/**"
+      - "26.2/**"
+      - "26.3/**"
+      - "scripts/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "gradle.properties"
+      - "gradle/**"
+      - "gradlew"
+      - "gradlew.bat"
+      # Bundled into every jar by the workspaces' multiloader-common.gradle.
+      - "LICENSE"
+      - "NOTICE"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Check publisher syntax
+        run: |
+          for f in scripts/*.mjs; do node --check "$f"; done
+      - name: Test publisher scripts (same-day guard)
+        run: node --test scripts/*.test.mjs
+      - name: Check the 8 targets, one version and metadata ranges
+        run: python3 scripts/check_targets.py workspaces
+
+  build:
+    name: build ${{ matrix.ws }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ws: "1.20.1"
+            key: "1201"
+          - ws: "1.21.1"
+            key: "1211"
+          - ws: "26.2"
+            key: "262"
+          - ws: "26.3"
+            key: "263"
+    steps:
+      - uses: actions/checkout@v4
+      # 21 stays JAVA_HOME (the root build and Gradle for 1.20.1/1.21.1); 17 is the 1.20.1 toolchain; the root
+      # build hands 26.x JAVA_HOME_25_X64.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            25
+            21
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build ${{ matrix.ws }} and run its unit tests
+        if: hashFiles(format('{0}/settings.gradle', matrix.ws)) != ''
+        shell: bash
+        run: |
+          # TEMP (porting): run the workspace wrapper directly until all 4 workspaces exist for the root build.
+          case "${{ matrix.ws }}" in 26.*) export JAVA_HOME="$JAVA_HOME_25_X64" ;; esac
+          cd "${{ matrix.ws }}"
+          chmod +x gradlew
+          ./gradlew build --no-daemon --continue -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64,JAVA_HOME_21_X64,JAVA_HOME_25_X64
+      # TEMP (porting): print the Minecraft signatures the port depends on.
+      - name: API dump
+        if: always() && startsWith(matrix.ws, '26.')
+        shell: bash
+        run: |
+          set +e
+          J=""
+          for j in $(find ~/.gradle/caches "$GITHUB_WORKSPACE/${{ matrix.ws }}" -name '*.jar' -size +8M 2>/dev/null); do
+            if unzip -l "$j" 2>/dev/null | grep -q 'net/minecraft/client/MouseHandler.class'; then J="$j"; break; fi
+          done
+          echo "jar: $J"
+          [ -n "$J" ] || exit 0
+          JP="$JAVA_HOME_25_X64/bin/javap"
+          for c in net.minecraft.world.entity.player.Inventory net.minecraft.server.PlayerAdvancements net.minecraft.world.item.BucketItem \
+                   net.minecraft.advancements.triggers.BredAnimalsTrigger net.minecraft.advancements.triggers.ChangeDimensionTrigger \
+                   net.minecraft.advancements.triggers.ConsumeItemTrigger net.minecraft.advancements.triggers.EnchantedItemTrigger \
+                   net.minecraft.advancements.triggers.FishingRodHookedTrigger net.minecraft.advancements.triggers.InventoryChangeTrigger \
+                   net.minecraft.advancements.triggers.KilledTrigger net.minecraft.advancements.triggers.TameAnimalTrigger \
+                   net.minecraft.advancements.triggers.TradeTrigger net.minecraft.client.MouseHandler com.mojang.blaze3d.platform.InputConstants \
+                   net.minecraft.server.permissions.LevelBasedPermissionSet net.minecraft.world.item.SpawnEggItem net.minecraft.server.players.NameAndId \
+                   net.minecraft.client.gui.GuiGraphicsExtractor net.minecraft.client.gui.components.toasts.Toast \
+                   net.minecraft.client.gui.components.MultiLineEditBox net.minecraft.client.KeyMapping net.minecraft.world.item.BlockItem; do
+            echo "=== $c"; "$JP" -p -cp "$J" "$c" 2>&1 | grep -v '^Compiled'
+          done
+          for c in net.minecraft.world.item.ItemStack net.minecraft.world.entity.player.Player net.minecraft.world.level.block.Block \
+                   net.minecraft.server.level.ServerPlayer net.minecraft.server.level.ServerPlayerGameMode net.minecraft.server.MinecraftServer; do
+            echo "=== $c (filtered)"; "$JP" -p -cp "$J" "$c" 2>&1 | grep -E 'interactOn|restoreFrom|onCraftedBy|popResource|popExperience|saveAllChunks|destroyBlock|useItemOn|hasPermissions|permissions\(|getGameProfile|createCommandSourceStack|getProfileCache|services\(|drop\('
+          done
+      - uses: actions/upload-artifact@v4
+        if: hashFiles(format('{0}/settings.gradle', matrix.ws)) != ''
+        with:
+          name: jars-${{ matrix.ws }}
+          path: ${{ matrix.ws }}/*/build/libs/corerpg_quests-*.jar
+          if-no-files-found: error
+
+  jars:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jars-*
+          path: built
+          merge-multiple: true
+      - name: Check the 8 jars
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-jars
+          find built -name 'corerpg_quests-*.jar' -exec cp -f -t ci-jars/ {} +
+          ls -l ci-jars
+          version="$(python3 scripts/check_targets.py version)"
+          python3 scripts/check_targets.py jars --version "$version" --dir ci-jars --list-file ci-jars.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: corerpg-quests-jars
+          path: ci-jars/*.jar
+          if-no-files-found: error

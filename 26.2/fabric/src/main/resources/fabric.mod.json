@@ -1,0 +1,39 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://nightbeam.dev/docs/corerpg-quests",
+        "sources": "https://github.com/MeherBenSalem/NoMore63AE2",
+        "issues": "https://github.com/MeherBenSalem/NoMore63AE2/issues"
+    },
+    "license": "${license}",
+    "icon": "assets/${mod_id}/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "dev.nightbeam.corerpg.quests.fabric.CoreQuestsFabric"
+        ],
+        "client": [
+            "dev.nightbeam.corerpg.quests.fabric.CoreQuestsFabricClient"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${fabric_loader_version}",
+        "fabric-api": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=${java_version}"
+    },
+    "breaks": {
+        "ftbquests": "*",
+        "ftbultimine": "*"
+    }
+}
