@@ -6,7 +6,7 @@
 
 Write a story in chapters, branch it, lock paths behind choices, and let your players walk it together. **Core RPG - Quests Engine** is one mod with everything a quest-driven pack needs: the quest book and its **in-game editor**, **teams and parties** with shared progress, **team stages**, **smart item filters** and **vein mining**. It covers what the FTB Quests suite does, in original code, with an RPG look of its own.
 
-**1.0 "The First Ember"** is available for **NeoForge and Fabric** on **1.21.1**. A small example book, *The First Ember*, is written to your config the first time a server starts, so you can see every feature at work.
+**1.0 "The First Ember"** is available for **Minecraft 1.20.1** (Fabric, Forge), **1.21.1**, **26.2** and **26.3** (Fabric, NeoForge). A small example book, *The First Ember*, is written to your config the first time a server starts, so you can see every feature at work.
 
 ![divider](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/divider.png)
 
@@ -38,7 +38,7 @@ Open a quest to read its story, with **colours, page breaks and inline images**,
 
 ![Any task. Any reward.](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-tasks.png)
 
-**24 task types**: item (have it or hand it in, with smart filters and component matching), checkmark, kill (type, tag or a named boss), advancement (or one criterion), location, dimension, biome, structure, stat, experience, observation, interaction, stage, custom, fluid, break block, place block, craft, consume, fish, trade, breed, tame and enchant. Everything is detected **on the server** through Minecraft's own triggers, so it behaves the same on NeoForge and Fabric.
+**24 task types**: item (have it or hand it in, with smart filters and component matching), checkmark, kill (type, tag or a named boss), advancement (or one criterion), location, dimension, biome, structure, stat, experience, observation, interaction, stage, custom, fluid, break block, place block, craft, consume, fish, trade, breed, tame and enchant. Everything is detected **on the server** through Minecraft's own triggers, so it behaves the same on every loader.
 
 ![Rewards worth the journey](https://raw.githubusercontent.com/MeherBenSalem/NoMore63AE2/main/marketing/images/card-rewards.png)
 
@@ -110,9 +110,12 @@ Hold **`** and break a block: the connected vein comes with it, outlined before 
 
 | Minecraft | Loaders | Also install |
 | --- | --- | --- |
-| 1.21.1 | NeoForge, Fabric | Fabric API (Fabric) |
+| 1.20.1 | Fabric, Forge | Fabric API (Fabric) |
+| 1.21.1 | Fabric, NeoForge | Fabric API (Fabric) |
+| 26.2 | Fabric, NeoForge | Fabric API (Fabric) |
+| 26.3 | Fabric, NeoForge | Fabric API (Fabric) |
 
-- Download the file whose name matches your loader: `-neoforge-` or `-fabric-`.
+- Download the file whose name matches **both** your Minecraft version and your loader, e.g. `corerpg_quests-fabric-1.21.1-….jar` or `corerpg_quests-forge-1.20.1-….jar`.
 - Install it on **both the server and every client**, at the same version.
 - Use it **instead of** FTB Quests and FTB Ultimine, not alongside them.
 - It is a mod. It does not work as a Paper, Spigot or Folia plugin.

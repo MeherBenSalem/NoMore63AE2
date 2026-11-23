@@ -58,11 +58,9 @@ public class EntityTask extends CountTask {
 
     @Override
     public void onTrigger(TaskContext ctx, TriggerEvent event) {
-        Entity subject = switch (event) {
-            case TriggerEvent.Breed breed -> breed.parent();
-            case TriggerEvent.Tame tame -> tame.animal();
-            default -> null;
-        };
+        Entity subject = event instanceof TriggerEvent.Breed breed ? breed.parent()
+                : event instanceof TriggerEvent.Tame tame ? tame.animal()
+                : null;
         if (subject != null && (entity == null || entity.matches(subject))) {
             ctx.addProgress(1);
         }

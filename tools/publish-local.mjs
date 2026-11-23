@@ -75,9 +75,16 @@ function savePublishState() {
   fs.writeFileSync(statePath, `${JSON.stringify(publishState, null, 2)}\n`);
 }
 
+// The NightBeam targets: exactly these 8 jars per release.
 const targets = [
+  { minecraft: '1.20.1', loader: 'fabric' },
+  { minecraft: '1.20.1', loader: 'forge' },
   { minecraft: '1.21.1', loader: 'fabric' },
   { minecraft: '1.21.1', loader: 'neoforge' },
+  { minecraft: '26.2', loader: 'fabric' },
+  { minecraft: '26.2', loader: 'neoforge' },
+  { minecraft: '26.3', loader: 'fabric' },
+  { minecraft: '26.3', loader: 'neoforge' },
 ];
 
 // Fabric API on Modrinth / CurseForge; the Fabric jar needs it.

@@ -19,6 +19,16 @@ const texture = (name) => url(path.join(textures, name));
 
 const VERSION = '1.0';
 const UPDATE = 'The First Ember';
+// The supported Minecraft versions. Adding a version is one line here
+// (plus one row in the compatibility table of curseforge/description.md).
+const VERSIONS = [
+  { minecraft: '1.20.1', loaders: ['Fabric', 'Forge'] },
+  { minecraft: '1.21.1', loaders: ['Fabric', 'NeoForge'] },
+  { minecraft: '26.2', loaders: ['Fabric', 'NeoForge'] },
+  { minecraft: '26.3', loaders: ['Fabric', 'NeoForge'] },
+];
+const LOADERS = ['Fabric', 'Forge', 'NeoForge'].filter((loader) => VERSIONS.some((v) => v.loaders.includes(loader)));
+const versionText = VERSIONS.map((v) => v.minecraft).join(' · ');
 
 const css = `
 @font-face { font-family: QSerif; src: url('${url(path.join(fonts, 'eb_garamond.ttf'))}'); }
@@ -117,8 +127,8 @@ const assets = {
       <div class="display gold glow" style="font-size:78px;line-height:1.06;margin:22px 0 26px;white-space:nowrap">Core RPG<br>Quests Engine</div>
       <div class="rule" style="width:640px;margin-bottom:26px"></div>
       <div style="font-size:34px;color:var(--header);line-height:1.3">Write the story. Chart the path.<br>Share the journey.</div>
-      <div style="margin-top:36px"><span class="pill">Fabric</span><span class="pill">NeoForge</span>
-        <span style="font-size:24px;color:var(--dim);margin-left:8px">1.21.1</span></div>
+      <div style="margin-top:36px">${LOADERS.map((l) => `<span class="pill">${l}</span>`).join('')}
+        <span style="font-size:24px;color:var(--dim);margin-left:8px">${versionText}</span></div>
     </div>`),
 
   icon: () => page(512, 512, `
@@ -152,7 +162,7 @@ const assets = {
 
   'card-tasks': () => card({
     kicker: '24 tasks · 12 rewards', title: 'Any task.<br>Any reward.',
-    points: ['Everything is detected on the server, through Minecraft\'s own triggers', 'Works the same on NeoForge and Fabric',
+    points: ['Everything is detected on the server, through Minecraft\'s own triggers', 'Works the same on every loader',
       'Rewards: items, experience, tables, choices, loot, commands, stages', 'Auto-claim, silent claim or invisible rewards'],
     art: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
       ${TASKS.map(([t, s]) => `<div class="frame" style="background:rgba(12,11,9,.9);padding:14px 22px">

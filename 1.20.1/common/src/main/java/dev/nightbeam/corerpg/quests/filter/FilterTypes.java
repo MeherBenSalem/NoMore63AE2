@@ -104,17 +104,20 @@ public final class FilterTypes {
 
     /** Interprets a parsed argument as a filter: a call, or an id/tag/mod shorthand. */
     public static ItemFilter toFilter(FilterParser.Arg arg) {
-        return switch (arg) {
-            case FilterParser.Arg.Call call -> {
-                Type type = BY_NAME.get(call.name().toLowerCase(Locale.ROOT));
-                if (type == null) {
-                    throw new FilterException("Unknown filter '" + call.name() + "'", call.position());
-                }
-                yield type.factory().create(call.args(), call.position());
+        if (arg instanceof FilterParser.Arg.Call call) {
+            Type type = BY_NAME.get(call.name().toLowerCase(Locale.ROOT));
+            if (type == null) {
+                throw new FilterException("Unknown filter '" + call.name() + "'", call.position());
             }
-            case FilterParser.Arg.Atom atom -> shorthand(atom.text(), atom.position());
-            case FilterParser.Arg.Str str -> new Filters.Name(str.text(), false);
-        };
+            return type.factory().create(call.args(), call.position());
+        }
+        if (arg instanceof FilterParser.Arg.Atom atom) {
+            return shorthand(atom.text(), atom.position());
+        }
+        if (arg instanceof FilterParser.Arg.Str str) {
+            return new Filters.Name(str.text(), false);
+        }
+        throw new IllegalStateException("Unknown argument " + arg);
     }
 
     private static ItemFilter shorthand(String text, int position) {
@@ -171,11 +174,14 @@ public final class FilterTypes {
     }
 
     private static String text(FilterParser.Arg arg) {
-        return switch (arg) {
-            case FilterParser.Arg.Atom atom -> atom.text();
-            case FilterParser.Arg.Str str -> str.text();
-            case FilterParser.Arg.Call call -> throw new FilterException("Expected a value, not " + call.name() + "(...)", call.position());
-        };
+        if (arg instanceof FilterParser.Arg.Atom atom) {
+            return atom.text();
+        }
+        if (arg instanceof FilterParser.Arg.Str str) {
+            return str.text();
+        }
+        FilterParser.Arg.Call call = (FilterParser.Arg.Call) arg;
+        throw new FilterException("Expected a value, not " + call.name() + "(...)", call.position());
     }
 
     private static Comparison comparison(FilterParser.Arg arg) {

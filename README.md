@@ -1,6 +1,7 @@
 # Core RPG - Quests Engine
 
-A complete RPG quest system for Minecraft **1.21.1** on **NeoForge** and **Fabric**: a quest book with chapters and
+A complete RPG quest system for Minecraft **1.20.1**, **1.21.1**, **26.2** and **26.3** on **Fabric**, **NeoForge**
+and **Forge** (1.20.1): a quest book with chapters and
 branching quests, an in-game editor, teams and parties with shared progress, team stages, smart item filters and
 vein mining. One mod covers what the FTB Quests suite (Quests, Library, Teams, Filter System, XMod Compat and
 Ultimine) does, with original code.
@@ -57,17 +58,26 @@ directly or through the Smart Filter item, which has an editor with live validat
 hunger, experience, a cooldown, the correct tool, tool-break protection, drop gathering, merge tags (`c:ores/*`) and
 a blacklist tag. With the key held, right-click to harvest and replant a field, strip logs, make paths or till soil.
 
-## Supported versions
+## Which jar do I download?
 
-| Minecraft | NeoForge | Fabric |
-|-----------|----------|--------|
-| 1.21.1    | 21.1.0+  | Loader 0.16.9+ with Fabric API |
+Jar names are `corerpg_quests-{loader}-{minecraft}-{modVersion}.jar`. Match **both** the Minecraft version and the
+loader.
+
+| Minecraft | Java | Fabric jar (needs Fabric API) | NeoForge / Forge jar |
+|-----------|------|-------------------------------|----------------------|
+| 1.20.1 | 17+ | `…-fabric-1.20.1-….jar` | `…-forge-1.20.1-….jar` (Forge 47) |
+| 1.21.1 | 21+ | `…-fabric-1.21.1-….jar` | `…-neoforge-1.21.1-….jar` |
+| 26.2 | 25+ | `…-fabric-26.2-….jar` | `…-neoforge-26.2-….jar` |
+| 26.3 | 25+ | `…-fabric-26.3-….jar` | `…-neoforge-26.3-….jar` |
 
 ## Installing
 
-Put `corerpg-quests-1.21.1-<loader>-<version>.jar` in `mods/` on the client and on the server (Fabric also needs
-Fabric API). The first server start writes an example book, "The First Ember", to `config/corerpg_quests/book/`, and
-settings to `config/corerpg_quests/server.toml` and `client.toml`.
+Put the jar in `mods/` on the client and on the server (Fabric also needs Fabric API). The first server start writes
+an example book, "The First Ember", to `config/corerpg_quests/book/`, and settings to
+`config/corerpg_quests/server.toml` and `client.toml`.
+
+On 1.20.1 items carry NBT instead of data components: item filters' `component(...)` checks the matching NBT, and a
+quest book that stores items with 1.21-style components loads those items without their extra data.
 
 ## Making a quest book
 
@@ -107,32 +117,65 @@ expressions with `FilterTypes.registerCustom`.
 
 ## Building
 
-Needs JDK 21.
+Each Minecraft version is a separate MultiLoader Gradle workspace with its own wrapper. These are the only supported
+targets (the NightBeam convention): 8 jars per release, all with the same version.
+
+| Minecraft | Loaders | Java | Folder |
+| --- | --- | --- | --- |
+| 1.20.1 | Forge, Fabric | 17 bytecode (build on 21) | `1.20.1/{common,forge,fabric}` |
+| 1.21.1 | NeoForge, Fabric | 21 | `1.21.1/{common,neoforge,fabric}` |
+| 26.2 | NeoForge, Fabric | 25 | `26.2/{common,neoforge,fabric}` |
+| 26.3 | NeoForge, Fabric | 25 | `26.3/{common,neoforge,fabric}` |
 
 ```bash
-cd 1.21.1
-./gradlew build
+./gradlew buildAll             # every workspace, then the 8 loader jars into releases/
+cd 1.20.1 && ./gradlew build   # Gradle on Java 21 (Java 17 toolchain)
+cd 1.21.1 && ./gradlew build   # Java 21
+cd 26.3 && ./gradlew build     # Java 25 (the same for 26.2)
+cd 1.21.1 && ./gradlew :common:test                 # unit tests (every workspace has them)
+cd 1.21.1 && ./gradlew :neoforge:runGameTestServer  # in-game tests (1.21.1 only)
+cd 1.21.1 && ./gradlew :fabric:runGametest          # in-game tests (1.21.1 only)
 ```
 
-The jars are written to `1.21.1/neoforge/build/libs/` and `1.21.1/fabric/build/libs/`. Tests:
+The root build hands the 26.x workspaces `JAVA_HOME_25_X64` (or `-Pjava25Home=<jdk>`) and the others
+`JAVA_HOME_21_X64` (or `-Pjava21Home=<jdk>`); without them each workspace uses the current `JAVA_HOME`.
+Jars land in `<workspace>/<loader>/build/libs/corerpg_quests-<loader>-<minecraft>-<version>.jar`. Every
+workspace's `gradle.properties` carries the same `version=` (`./gradlew checkVersions`; set it with
+`./gradlew syncVersion -PmodVersion=x.y.z`). `python3 scripts/check_targets.py workspaces` checks the targets, the
+shared version and the metadata ranges. Release notes for a version live in `patchnotes/<version>.md` and
+`CHANGELOG.md`.
 
-```bash
-./gradlew :common:test                 # unit tests
-./gradlew :neoforge:runGameTestServer  # in-game tests on NeoForge
-./gradlew :fabric:runGametest          # in-game tests on Fabric
-```
+## Releasing
+
+CI (`.github/workflows/ci.yml`) builds all 8 jars on every push to `main` that touches the build. Publishing to
+Modrinth and CurseForge is `.github/workflows/publish.yml`, run by hand (`version`, `dry_run`) or by a `v*.*.*` tag;
+it never runs on a plain push. It refuses a second release of the mod on the same day (Africa/Tunis), takes the jars
+from the GitHub Release or a build from source, and fails unless exactly the 8 jars are found. It needs the secrets
+`MODRINTH_TOKEN`, `CURSEFORGE_TOKEN`, `CURSEFORGE_API_KEY` and the variables `CORERPG_QUESTS_MODRINTH_ID`,
+`CORERPG_QUESTS_CURSEFORGE_ID` (they default to this mod's projects, `ywtf09FK` and `1585209`). Modrinth version
+numbers look like `1.0.2+fabric-1.21.1`.
 
 ## Project layout
 
 ```
-1.21.1/common/     game logic, GUI and mixins, shared by both loaders
-1.21.1/neoforge/   NeoForge entry points and platform code
-1.21.1/fabric/     Fabric entry points and platform code
+<mc>/common/       game logic, GUI and mixins, shared by the loaders of one Minecraft version
+<mc>/fabric/       Fabric entry points and platform code
+<mc>/neoforge/     NeoForge entry points and platform code (1.21.1, 26.2, 26.3)
+1.20.1/forge/      Forge entry points and platform code
 1.21.1/tools/art/  scripts that generate the textures
 docs/              quest book format reference
 marketing/         CurseForge and Modrinth page and artwork
+scripts/           target checks and the publish same-day guard
 tools/             release and documentation scripts
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+See [.github/SECURITY.md](.github/SECURITY.md).
 
 ## License
 

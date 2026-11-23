@@ -657,12 +657,8 @@ final class QuestPanel {
         } catch (IllegalArgumentException e) {
             return;
         }
-        mc.gui.setScreen(new ConfirmLinkScreen(yes -> {
-            if (yes) {
-                Util.getPlatform().openUri(uri);
-            }
-            mc.gui.setScreen(screen);
-        }, uri, true));
+        // 26.3: OS.openUri is gone; confirmLinkNow asks, opens the link and returns to the book.
+        ConfirmLinkScreen.confirmLinkNow(screen, uri, true);
     }
 
     // ------------------------------------------------------------------ Input

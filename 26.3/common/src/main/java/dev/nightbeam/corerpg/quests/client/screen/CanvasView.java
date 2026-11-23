@@ -792,13 +792,8 @@ final class CanvasView {
                 } catch (IllegalArgumentException ignored) {
                 }
                 if (uri != null && (url.startsWith("https://") || url.startsWith("http://"))) {
-                    java.net.URI target = uri;
-                    mc.gui.setScreen(new ConfirmLinkScreen(yes -> {
-                        if (yes) {
-                            Util.getPlatform().openUri(target);
-                        }
-                        mc.gui.setScreen(screen);
-                    }, target, true));
+                    // 26.3: OS.openUri is gone; confirmLinkNow asks, opens the link and returns to the book.
+                    ConfirmLinkScreen.confirmLinkNow(screen, uri, true);
                 }
             }
             case RUN_COMMAND -> {

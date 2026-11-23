@@ -76,37 +76,29 @@ public class ItemEventTask extends ItemCriteriaTask {
 
     @Override
     public void onTrigger(TaskContext ctx, TriggerEvent event) {
-        switch (event) {
-            case TriggerEvent.Craft craft -> {
+        if (event instanceof TriggerEvent.Craft craft) {
                 if (test(craft.stack())) {
                     ctx.addProgress(Math.max(1, craft.amount()));
                 }
-            }
-            case TriggerEvent.Consume consume -> {
+            } else if (event instanceof TriggerEvent.Consume consume) {
                 if (test(consume.stack())) {
                     ctx.addProgress(1);
                 }
-            }
-            case TriggerEvent.Fish fish -> {
+            } else if (event instanceof TriggerEvent.Fish fish) {
                 for (ItemStack stack : fish.items()) {
                     if (test(stack)) {
                         ctx.addProgress(stack.getCount());
                     }
                 }
-            }
-            case TriggerEvent.Trade tradeEvent -> {
+            } else if (event instanceof TriggerEvent.Trade tradeEvent) {
                 if (test(tradeEvent.result())) {
                     ctx.addProgress(1);
                 }
-            }
-            case TriggerEvent.Enchant enchantEvent -> {
+            } else if (event instanceof TriggerEvent.Enchant enchantEvent) {
                 if (enchantEvent.levels() >= minLevels && test(enchantEvent.stack())) {
                     ctx.addProgress(1);
                 }
             }
-            default -> {
-            }
-        }
     }
 
     @Override

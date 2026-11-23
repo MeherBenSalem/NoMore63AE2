@@ -12,6 +12,7 @@ System, Remnant Bosses): gold Cinzel titles over a dark, blurred in-game backdro
 | `images/card-*.png` | 1600×900 feature cards for the description and the gallery. |
 | `images/header-*.png`, `images/divider.png` | Transparent section headers and a divider. |
 | `images/screenshots/*.jpg` | Real in-game captures (NeoForge 1.21.1, 1920×1080, GUI scale 3) used by the cards and the gallery. |
+| `modrinth/description.md`, `modrinth/summary.txt` | The Modrinth copy, generated from `curseforge/` by `python3 tools/make_modrinth_md.py .` (the gallery section becomes a pointer to Modrinth's Gallery tab). |
 | `source/render.cjs` | Renders every PNG above from the screenshots and the mod's bundled fonts. |
 | `source/backdrop.jpg` | The blurred scenery behind the banner and cards (an in-game capture). |
 
@@ -27,7 +28,8 @@ NODE_PATH="$(npm root -g)" node marketing/source/render.cjs              # every
 NODE_PATH="$(npm root -g)" node marketing/source/render.cjs card-editor  # one asset
 ```
 
-The version and update name are at the top of `render.cjs`.
+The version, update name and the supported Minecraft versions and loaders (`VERSIONS`) are at the top of
+`render.cjs`.
 
 ## Retaking the screenshots
 

@@ -45,20 +45,15 @@ public class InteractionTask extends CountTask {
 
     @Override
     public void onTrigger(TaskContext ctx, TriggerEvent event) {
-        switch (event) {
-            case TriggerEvent.InteractBlock ib -> {
+        if (event instanceof TriggerEvent.InteractBlock ib) {
                 if ((block == null || block.matches(ib.state())) && held(ib.held())) {
                     ctx.addProgress(1);
                 }
-            }
-            case TriggerEvent.InteractEntity ie -> {
+            } else if (event instanceof TriggerEvent.InteractEntity ie) {
                 if ((entity == null || entity.matches(ie.entity())) && held(ie.held())) {
                     ctx.addProgress(1);
                 }
             }
-            default -> {
-            }
-        }
     }
 
     private boolean held(ItemStack stack) {

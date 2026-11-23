@@ -1,5 +1,16 @@
 # Core RPG - Quests Engine — Changelog
 
+## 1.0.2
+
+### New
+* Now available for **Minecraft 1.20.1** (Fabric and Forge), **26.2** and **26.3** (Fabric and NeoForge), next to
+  1.21.1 (Fabric and NeoForge). Pick the jar that matches both your Minecraft version and your loader; the names are
+  now `corerpg_quests-<loader>-<minecraft>-<version>.jar`.
+* On 1.20.1 items carry NBT instead of data components: item filters' `component(...)` checks the matching NBT, and
+  items saved in a quest book with 1.21-style components load without that extra data.
+* On 26.2 and 26.3 locked quests show their item icons untinted and long button labels are cut off instead of
+  scrolling; on 26.3 the right-click area tools recognise axes, shovels and hoes by their item tags.
+
 ## 1.0.1
 
 ### Fixed
