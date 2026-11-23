@@ -457,7 +457,7 @@ public class FilterEditorScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         int keyCode = event.key();
-        int scanCode = event.scancode();
+        int scanCode = event.keycode();
         int modifiers = event.modifiers();
         // Ctrl+Enter / Cmd+Enter saves without leaving the keyboard.
         if ((keyCode == 257 || keyCode == 335) && net.minecraft.client.Minecraft.getInstance().hasControlDown()) {

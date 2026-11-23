@@ -788,7 +788,7 @@ public class QuestBookScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         int key = event.key();
-        int scan = event.scancode();
+        int scan = event.keycode();
         int modifiers = event.modifiers();
         if (key == InputConstants.KEY_ESCAPE) {
             if (menu != null) {

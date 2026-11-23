@@ -98,7 +98,7 @@ public final class QuestCommands {
                             for (ServerPlayer p : EntityArgument.getPlayers(ctx, "targets")) {
                                 ItemStack stack = new ItemStack(ModRegistry.QUEST_BOOK.get());
                                 if (!p.getInventory().add(stack)) {
-                                    p.drop(stack, false);
+                                    p.drop(stack, false, net.minecraft.util.Prediction.SERVER_ONLY);
                                 }
                             }
                             return 1;

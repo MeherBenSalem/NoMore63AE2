@@ -1,0 +1,1163 @@
+{
+  "id": "book",
+  "title": "&6The First Ember",
+  "icon": "minecraft:campfire",
+  "subtitle": [
+    "&7The sun went out. Someone has to light it again.",
+    "&8An example book for Core RPG - Quests Engine. Replace it with your own."
+  ],
+  "lock_message": "&7Finish the quests that lead here first.",
+  "default_quest_shape": "circle",
+  "emergency_items": [
+    "minecraft:bread",
+    "minecraft:torch"
+  ],
+  "emergency_items_cooldown": 600,
+  "groups": [
+    {
+      "id": "groups/road",
+      "title": "&6The Long Road",
+      "icon": "minecraft:compass"
+    },
+    {
+      "id": "groups/hearth",
+      "title": "&aHearth & Field",
+      "icon": "minecraft:wheat"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "first_ember",
+      "title": "&6I. The First Ember",
+      "icon": "minecraft:torch",
+      "group": "groups/road",
+      "subtitle": [
+        "Wood, stone and fire: the oldest answers to the dark."
+      ],
+      "autofocus": "first_ember/awaken",
+      "quests": [
+        {
+          "id": "first_ember/awaken",
+          "title": "&6Awaken",
+          "shape": "hexagon",
+          "size": 1.5,
+          "subtitle": "Open your eyes.",
+          "description": [
+            "&o\"Ash on your tongue, cold in your bones. Good. You are alive.\"&r",
+            "",
+            "This book follows you. Every page is a &6chapter&r, every mark a &6quest&r. Finish a quest to unlock the ones that hang from it.",
+            "",
+            "Tick the box below, then claim your first reward."
+          ],
+          "x": 0,
+          "y": 0,
+          "tasks": [
+            {
+              "id": "first_ember/awaken/read",
+              "type": "checkmark",
+              "title": "I have read the opening page"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/awaken/xp",
+              "type": "xp",
+              "xp": 20
+            },
+            {
+              "id": "first_ember/awaken/bread",
+              "type": "item",
+              "item": "minecraft:bread",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "id": "first_ember/timber",
+          "title": "Timber",
+          "subtitle": "Any wood will do.",
+          "description": [
+            "Fell a tree. Any kind counts: this task uses a &efilter&r (&7#minecraft:logs&r), so oak, birch or crimson stems are all fine.",
+            "",
+            "You do not hand the logs in. Carrying them is enough."
+          ],
+          "x": 2,
+          "y": 0,
+          "dependencies": [
+            "first_ember/awaken"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/timber/logs",
+              "type": "item",
+              "title": "Any 16 logs",
+              "filter": "#minecraft:logs",
+              "count": 16
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/timber/apples",
+              "type": "item",
+              "item": "minecraft:apple",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "id": "first_ember/workbench",
+          "title": "A Place to Work",
+          "subtitle": "Craft a crafting table.",
+          "x": 4,
+          "y": 0,
+          "dependencies": [
+            "first_ember/timber"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/workbench/table",
+              "type": "craft",
+              "item": "minecraft:crafting_table"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/workbench/xp",
+              "type": "xp",
+              "xp": 15
+            }
+          ]
+        },
+        {
+          "id": "first_ember/stone",
+          "title": "The Stone Age",
+          "description": [
+            "Stone, deepslate, granite... anything from the overworld's bones counts, as long as you dig it with a &epickaxe&r.",
+            "",
+            "&7Tip: hold the &fvein mining&7 key (default &f`&7) while breaking to take a whole vein at once."
+          ],
+          "x": 6,
+          "y": 0,
+          "dependencies": [
+            "first_ember/workbench"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/stone/mine",
+              "type": "break_block",
+              "title": "Mine 32 stone with a pickaxe",
+              "block": "#minecraft:base_stone_overworld",
+              "value": 32,
+              "tool_filter": "#minecraft:pickaxes"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/stone/torches",
+              "type": "item",
+              "item": "minecraft:torch",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "id": "first_ember/offering",
+          "title": "The Offering",
+          "shape": "diamond",
+          "description": [
+            "The shrine wants fuel. This task &ctakes&r the items: open the quest and press &eHand In&r.",
+            "",
+            "You can hand them in a few at a time; the shrine remembers."
+          ],
+          "x": 6,
+          "y": 2,
+          "dependencies": [
+            "first_ember/stone"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/offering/coal",
+              "type": "item",
+              "title": "Hand in 8 coal or charcoal",
+              "filter": "any(minecraft:coal, minecraft:charcoal)",
+              "count": 8,
+              "consume_items": "true"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/offering/crate",
+              "type": "random",
+              "table": "tables/traveler_cache"
+            }
+          ]
+        },
+        {
+          "id": "first_ember/kindle",
+          "title": "&6Kindle",
+          "shape": "hexagon",
+          "size": 1.25,
+          "description": [
+            "Light the dark around you. Torches on walls and floors both count."
+          ],
+          "x": 8,
+          "y": 0,
+          "dependencies": [
+            "first_ember/stone",
+            "first_ember/offering"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/kindle/torches",
+              "type": "place_block",
+              "title": "Place 8 torches",
+              "block": "minecraft:torch",
+              "value": 8
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/kindle/xp",
+              "type": "xp_levels",
+              "levels": 2
+            },
+            {
+              "id": "first_ember/kindle/toast",
+              "type": "toast",
+              "title": "&6The first ember burns",
+              "description": "Somewhere far away, something noticed.",
+              "autoclaim": "enabled",
+              "icon": "minecraft:blaze_powder"
+            }
+          ]
+        },
+        {
+          "id": "first_ember/hearth",
+          "title": "Warm Food",
+          "optional": true,
+          "subtitle": "Optional",
+          "description": [
+            "Not every quest is required. &dOptional&r quests do not count toward finishing the chapter."
+          ],
+          "x": 8,
+          "y": 2,
+          "dependencies": [
+            "first_ember/kindle"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/hearth/eat",
+              "type": "consume",
+              "title": "Eat 3 cooked meals",
+              "filter": "any(minecraft:cooked_beef, minecraft:cooked_porkchop, minecraft:cooked_chicken, minecraft:cooked_mutton, minecraft:cooked_cod, minecraft:cooked_salmon, minecraft:baked_potato, minecraft:bread)",
+              "count": 3
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/hearth/stew",
+              "type": "item",
+              "item": "minecraft:rabbit_stew",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "id": "first_ember/iron",
+          "title": "Iron in the Blood",
+          "x": 10,
+          "y": 0,
+          "dependencies": [
+            "first_ember/kindle"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/iron/ingots",
+              "type": "item",
+              "item": "minecraft:iron_ingot",
+              "count": 8
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/iron/xp",
+              "type": "xp",
+              "xp": 40
+            }
+          ]
+        },
+        {
+          "id": "first_ember/oath",
+          "title": "&eThe Oath",
+          "shape": "shield",
+          "size": 1.25,
+          "max_completable_dependents": 1,
+          "description": [
+            "Two paths leave this page and you may walk only &cone&r.",
+            "",
+            "Finishing either quest below locks the other away for good. Choose with care."
+          ],
+          "x": 12,
+          "y": 0,
+          "dependencies": [
+            "first_ember/iron"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/oath/check",
+              "type": "checkmark",
+              "title": "I will choose one path"
+            }
+          ],
+          "rewards": []
+        },
+        {
+          "id": "first_ember/path_blade",
+          "title": "Path of the Blade",
+          "subtitle": "Steel and nerve.",
+          "x": 13.5,
+          "y": -1.5,
+          "dependencies": [
+            "first_ember/oath"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/path_blade/sword",
+              "type": "craft",
+              "item": "minecraft:iron_sword"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/path_blade/shield",
+              "type": "item",
+              "item": "minecraft:shield"
+            }
+          ]
+        },
+        {
+          "id": "first_ember/path_bow",
+          "title": "Path of the Bow",
+          "subtitle": "Patience and distance.",
+          "x": 13.5,
+          "y": 1.5,
+          "dependencies": [
+            "first_ember/oath"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/path_bow/bow",
+              "type": "craft",
+              "item": "minecraft:bow"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/path_bow/arrows",
+              "type": "item",
+              "item": "minecraft:arrow",
+              "count": 32
+            }
+          ]
+        },
+        {
+          "id": "first_ember/night",
+          "title": "What Walks at Night",
+          "dependency_mode": "one_completed",
+          "shape": "octagon",
+          "size": 1.25,
+          "description": [
+            "Whichever path you took, the dead do not care. Zombies, skeletons, drowned: any &eundead&r counts.",
+            "",
+            "Your reward is a &6choice&r: pick the weapon that suits your path."
+          ],
+          "x": 15,
+          "y": 0,
+          "dependencies": [
+            "first_ember/path_blade",
+            "first_ember/path_bow"
+          ],
+          "tasks": [
+            {
+              "id": "first_ember/night/undead",
+              "type": "kill",
+              "title": "Put 10 undead to rest",
+              "entity": "#minecraft:undead",
+              "value": 10
+            }
+          ],
+          "rewards": [
+            {
+              "id": "first_ember/night/arms",
+              "type": "choice",
+              "table": "tables/oathbound_arms"
+            },
+            {
+              "id": "first_ember/night/xp",
+              "type": "xp_levels",
+              "levels": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hearth",
+      "title": "&aHearth & Field",
+      "icon": "minecraft:hay_block",
+      "group": "groups/hearth",
+      "subtitle": [
+        "A fire needs more than wood. It needs people around it."
+      ],
+      "default_quest_shape": "rsquare",
+      "quests": [
+        {
+          "id": "hearth/herd",
+          "title": "A Small Herd",
+          "description": [
+            "Feed two cows wheat and let nature do the rest."
+          ],
+          "x": 0,
+          "y": 0,
+          "dependencies": [
+            "first_ember/workbench"
+          ],
+          "tasks": [
+            {
+              "id": "hearth/herd/cows",
+              "type": "breed",
+              "title": "Breed 2 cows",
+              "entity": "minecraft:cow",
+              "value": 2
+            }
+          ],
+          "rewards": [
+            {
+              "id": "hearth/herd/wheat",
+              "type": "item",
+              "item": "minecraft:wheat",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "id": "hearth/companion",
+          "title": "A Loyal Companion",
+          "x": 2,
+          "y": -1,
+          "dependencies": [
+            "hearth/herd"
+          ],
+          "tasks": [
+            {
+              "id": "hearth/companion/wolf",
+              "type": "tame",
+              "title": "Tame a wolf",
+              "entity": "minecraft:wolf",
+              "value": 1
+            }
+          ],
+          "rewards": [
+            {
+              "id": "hearth/companion/bones",
+              "type": "item",
+              "item": "minecraft:bone",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "id": "hearth/angler",
+          "title": "The Angler",
+          "x": 2,
+          "y": 1,
+          "dependencies": [
+            "hearth/herd"
+          ],
+          "tasks": [
+            {
+              "id": "hearth/angler/fish",
+              "type": "fish",
+              "title": "Fish up 5 fish",
+              "filter": "#minecraft:fishes",
+              "count": 5
+            }
+          ],
+          "rewards": [
+            {
+              "id": "hearth/angler/rod",
+              "type": "item",
+              "item": "minecraft:fishing_rod",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "id": "hearth/pufferfish",
+          "title": "&dSomething Spiky",
+          "optional": true,
+          "hide_until_deps_complete": "true",
+          "description": [
+            "You only see this quest once &eThe Angler&r is done: it is set to &7hide until its dependencies are complete&r."
+          ],
+          "x": 4,
+          "y": 2.5,
+          "dependencies": [
+            "hearth/angler"
+          ],
+          "tasks": [
+            {
+              "id": "hearth/pufferfish/fish",
+              "type": "fish",
+              "item": "minecraft:pufferfish",
+              "count": 1
+            }
+          ],
+          "rewards": [
+            {
+              "id": "hearth/pufferfish/xp",
+              "type": "xp",
+              "xp": 50
+            }
+          ]
+        },
+        {
+          "id": "hearth/neighbours",
+          "title": "Neighbours",
+          "require_sequential_tasks": "true",
+          "description": [
+            "Introduce yourself first (right-click a villager), then trade. The tasks must be done &ein order&r."
+          ],
+          "x": 4,
+          "y": 0,
+          "dependencies": [
+            "hearth/companion",
+            "hearth/angler"
+          ],
+          "tasks": [
+            {
+              "id": "hearth/neighbours/talk",
+              "type": "interaction",
+              "title": "Talk to a villager",
+              "target": "entity",
+              "entity": "minecraft:villager",
+              "value": 1
+            },
+            {
+              "id": "hearth/neighbours/trade",
+              "type": "trade",
+              "title": "Make 3 trades",
+              "count": 3
+            }
+          ],
+          "rewards": [
+            {
+              "id": "hearth/neighbours/emeralds",
+              "type": "item",
+              "item": "minecraft:emerald",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "id": "hearth/scholar",
+          "title": "The Scholar",
+          "shape": "star",
+          "description": [
+            "Look at an enchanting table (keep your crosshair on it), then enchant something."
+          ],
+          "x": 6,
+          "y": 0,
+          "dependencies": [
+            "hearth/neighbours"
+          ],
+          "tasks": [
+            {
+              "id": "hearth/scholar/study",
+              "type": "observation",
+              "title": "Study an enchanting table for 3 seconds",
+              "target": "block",
+              "block": "minecraft:enchanting_table",
+              "ticks": 60
+            },
+            {
+              "id": "hearth/scholar/enchant",
+              "type": "enchant",
+              "title": "Enchant anything",
+              "count": 1,
+              "min_levels": 1
+            }
+          ],
+          "rewards": [
+            {
+              "id": "hearth/scholar/lapis",
+              "type": "item",
+              "item": "minecraft:lapis_lazuli",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "id": "hearth/bounty",
+          "title": "&cBounty Board",
+          "repeatable": true,
+          "repeat_cooldown": 600,
+          "shape": "square",
+          "description": [
+            "The village pays for every five zombies. This quest &6repeats&r: claim the reward and it starts over after a ten-minute cooldown."
+          ],
+          "x": 2,
+          "y": 3,
+          "dependencies": [
+            "hearth/herd"
+          ],
+          "tasks": [
+            {
+              "id": "hearth/bounty/zombies",
+              "type": "kill",
+              "entity": "minecraft:zombie",
+              "value": 5
+            }
+          ],
+          "rewards": [
+            {
+              "id": "hearth/bounty/spoils",
+              "type": "random",
+              "table": "tables/bounty_spoils"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wider_world",
+      "title": "&bII. The Wider World",
+      "icon": "minecraft:filled_map",
+      "group": "groups/road",
+      "subtitle": [
+        "Beyond the firelight the world goes on, stranger than you remember."
+      ],
+      "quests": [
+        {
+          "id": "wider_world/forest",
+          "title": "Under the Canopy",
+          "x": 0,
+          "y": 0,
+          "dependencies": [
+            "first_ember/kindle"
+          ],
+          "tasks": [
+            {
+              "id": "wider_world/forest/visit",
+              "type": "biome",
+              "biome": "#minecraft:is_forest"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "wider_world/forest/saplings",
+              "type": "item",
+              "item": "minecraft:oak_sapling",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "id": "wider_world/village",
+          "title": "Lights in the Distance",
+          "x": 2,
+          "y": -1,
+          "dependencies": [
+            "wider_world/forest"
+          ],
+          "tasks": [
+            {
+              "id": "wider_world/village/find",
+              "type": "structure",
+              "structure": "#minecraft:village"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "wider_world/village/bread",
+              "type": "item",
+              "item": "minecraft:bread",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "id": "wider_world/summit",
+          "title": "The Summit",
+          "description": [
+            "Climb somewhere high near the world's centre. While you are at it: jump a hundred times. The game keeps count (&7statistic&r)."
+          ],
+          "x": 2,
+          "y": 1,
+          "dependencies": [
+            "wider_world/forest"
+          ],
+          "tasks": [
+            {
+              "id": "wider_world/summit/climb",
+              "type": "location",
+              "title": "Stand high above spawn (y 120+, within 256 blocks of 0, 0)",
+              "dimension": "minecraft:overworld",
+              "x": -256,
+              "y": 120,
+              "z": -256,
+              "width": 512,
+              "height": 200,
+              "depth": 512
+            },
+            {
+              "id": "wider_world/summit/jumps",
+              "type": "stat",
+              "stat": "minecraft:jump",
+              "value": 100
+            }
+          ],
+          "rewards": [
+            {
+              "id": "wider_world/summit/feather",
+              "type": "item",
+              "item": "minecraft:feather",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "id": "wider_world/lava",
+          "title": "Liquid Fire",
+          "description": [
+            "Bring two buckets of lava and hand them in. You get the empty buckets back."
+          ],
+          "x": 4,
+          "y": 0,
+          "dependencies": [
+            "wider_world/village",
+            "wider_world/summit"
+          ],
+          "tasks": [
+            {
+              "id": "wider_world/lava/hand_in",
+              "type": "fluid",
+              "fluid": "minecraft:lava",
+              "amount": 2000
+            }
+          ],
+          "rewards": [
+            {
+              "id": "wider_world/lava/obsidian",
+              "type": "item",
+              "item": "minecraft:obsidian",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "id": "wider_world/toll",
+          "title": "The Ferryman's Toll",
+          "shape": "pentagon",
+          "description": [
+            "The way down is never free. Pay the toll from the quest book."
+          ],
+          "x": 6,
+          "y": 0,
+          "dependencies": [
+            "wider_world/lava"
+          ],
+          "tasks": [
+            {
+              "id": "wider_world/toll/pay",
+              "type": "xp",
+              "title": "Pay 10 levels",
+              "value": 10,
+              "consume": true
+            }
+          ],
+          "rewards": [
+            {
+              "id": "wider_world/toll/flint",
+              "type": "item",
+              "item": "minecraft:flint_and_steel"
+            }
+          ]
+        },
+        {
+          "id": "wider_world/nether_gate",
+          "title": "&cThe Burning Gate",
+          "shape": "gear",
+          "size": 1.5,
+          "description": [
+            "Build a portal and step through.",
+            "",
+            "This quest grants the team stage &enether_touched&r. Other quests, other mods and scripts can all check for it."
+          ],
+          "x": 8,
+          "y": 0,
+          "dependencies": [
+            "wider_world/toll"
+          ],
+          "tasks": [
+            {
+              "id": "wider_world/nether_gate/enter",
+              "type": "dimension",
+              "dimension": "minecraft:the_nether"
+            },
+            {
+              "id": "wider_world/nether_gate/adv",
+              "type": "advancement",
+              "title": "Earn 'We Need to Go Deeper'",
+              "advancement": "minecraft:story/enter_the_nether"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "wider_world/nether_gate/stage",
+              "type": "stage",
+              "stage": "nether_touched",
+              "autoclaim": "enabled"
+            },
+            {
+              "id": "wider_world/nether_gate/blessing",
+              "type": "command",
+              "title": "&dEmber's Blessing",
+              "command": "/effect give {p} minecraft:fire_resistance 120 0",
+              "feedback_message": "&6You feel the heat, and it does not burn."
+            }
+          ]
+        },
+        {
+          "id": "wider_world/shrine",
+          "title": "&5The Hidden Shrine",
+          "optional": true,
+          "description": [
+            "A &ecustom&r task: a command block, a datapack function or a script completes it with",
+            "&7/corequests custom @p example:shrine_lit"
+          ],
+          "x": 6,
+          "y": 2,
+          "dependencies": [
+            "wider_world/lava"
+          ],
+          "tasks": [
+            {
+              "id": "wider_world/shrine/lit",
+              "type": "custom",
+              "title": "Light the hidden shrine",
+              "key": "example:shrine_lit",
+              "value": 1
+            }
+          ],
+          "rewards": [
+            {
+              "id": "wider_world/shrine/loot",
+              "type": "loot",
+              "loot_table": "minecraft:chests/simple_dungeon",
+              "rolls": 1
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "id": "wider_world/link_kindle",
+          "quest": "first_ember/kindle",
+          "x": -2,
+          "y": 0
+        }
+      ],
+      "images": [
+        {
+          "id": "wider_world/map",
+          "image": "minecraft:textures/item/filled_map.png",
+          "x": 4,
+          "y": -2.5,
+          "width": 1.5,
+          "height": 1.5,
+          "rotation": -8,
+          "hover": [
+            "&7A map of the wider world.",
+            "&8Images can be decoration or clickable."
+          ],
+          "click_action": "open_chapter",
+          "click_data": "embers_end"
+        }
+      ]
+    },
+    {
+      "id": "embers_end",
+      "title": "&6III. Ember's End",
+      "icon": "minecraft:blaze_rod",
+      "group": "groups/road",
+      "subtitle": [
+        "Everything you lit leads here."
+      ],
+      "default_quest_shape": "hexagon",
+      "quests": [
+        {
+          "id": "embers_end/marked",
+          "title": "Marked by Fire",
+          "subtitle": "Needs the whole Wider World chapter.",
+          "description": [
+            "This quest depends on an entire &bchapter&r: it unlocks once every required quest in &bThe Wider World&r is done.",
+            "Its task checks a team &estage&r granted by &cThe Burning Gate&r."
+          ],
+          "x": 0,
+          "y": 0,
+          "dependencies": [
+            "wider_world"
+          ],
+          "tasks": [
+            {
+              "id": "embers_end/marked/stage",
+              "type": "stage",
+              "title": "Carry the stage 'nether_touched'",
+              "stage": "nether_touched"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "embers_end/marked/xp",
+              "type": "xp_levels",
+              "levels": 5
+            }
+          ]
+        },
+        {
+          "id": "embers_end/relight",
+          "title": "&6Relight the Sun",
+          "size": 2,
+          "hide_details_until_startable": "true",
+          "completion_command": "/title {p} title {\"text\":\"The sun returns\",\"color\":\"gold\"}",
+          "description": [
+            "Hunt the blazes and bring their rods back to the shrine.",
+            "",
+            "The final reward is a &6team reward&r: one member claims it for everyone."
+          ],
+          "x": 2,
+          "y": 0,
+          "dependencies": [
+            "embers_end/marked"
+          ],
+          "tasks": [
+            {
+              "id": "embers_end/relight/blaze",
+              "type": "kill",
+              "entity": "minecraft:blaze",
+              "value": 5
+            },
+            {
+              "id": "embers_end/relight/rods",
+              "type": "item",
+              "item": "minecraft:blaze_rod",
+              "count": 6,
+              "consume_items": "true"
+            }
+          ],
+          "rewards": [
+            {
+              "id": "embers_end/relight/all",
+              "type": "all_table",
+              "table": "tables/sunfire_hoard",
+              "team_reward": "true"
+            },
+            {
+              "id": "embers_end/relight/xp",
+              "type": "xp_levels",
+              "levels": 10
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reward_tables": [
+    {
+      "id": "tables/traveler_cache",
+      "title": "Traveler's Cache",
+      "icon": "minecraft:bundle",
+      "rolls": 2,
+      "entries": [
+        {
+          "id": "tables/traveler_cache/bread",
+          "type": "item",
+          "item": "minecraft:bread",
+          "count": 6,
+          "weight": 3
+        },
+        {
+          "id": "tables/traveler_cache/iron",
+          "type": "item",
+          "item": "minecraft:iron_ingot",
+          "count": 4,
+          "weight": 2
+        },
+        {
+          "id": "tables/traveler_cache/arrows",
+          "type": "item",
+          "item": "minecraft:arrow",
+          "count": 16,
+          "weight": 2
+        },
+        {
+          "id": "tables/traveler_cache/gapple",
+          "type": "item",
+          "item": "minecraft:golden_apple",
+          "count": 1,
+          "weight": 1
+        },
+        {
+          "id": "tables/traveler_cache/diamond",
+          "type": "item",
+          "item": "minecraft:diamond",
+          "count": 1,
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "id": "tables/oathbound_arms",
+      "title": "Oathbound Arms",
+      "icon": "minecraft:iron_sword",
+      "entries": [
+        {
+          "id": "tables/oathbound_arms/sword",
+          "type": "item",
+          "item": "minecraft:iron_sword",
+          "weight": 1
+        },
+        {
+          "id": "tables/oathbound_arms/axe",
+          "type": "item",
+          "item": "minecraft:iron_axe",
+          "weight": 1
+        },
+        {
+          "id": "tables/oathbound_arms/bow",
+          "type": "item",
+          "item": "minecraft:bow",
+          "weight": 1
+        },
+        {
+          "id": "tables/oathbound_arms/crossbow",
+          "type": "item",
+          "item": "minecraft:crossbow",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "tables/bounty_spoils",
+      "title": "Bounty Spoils",
+      "icon": "minecraft:emerald",
+      "rolls": 1,
+      "entries": [
+        {
+          "id": "tables/bounty_spoils/emeralds",
+          "type": "item",
+          "item": "minecraft:emerald",
+          "count": 3,
+          "weight": 4
+        },
+        {
+          "id": "tables/bounty_spoils/gold",
+          "type": "item",
+          "item": "minecraft:gold_ingot",
+          "count": 2,
+          "weight": 3
+        },
+        {
+          "id": "tables/bounty_spoils/xp",
+          "type": "xp",
+          "xp": 60,
+          "weight": 2
+        },
+        {
+          "id": "tables/bounty_spoils/crate",
+          "type": "item",
+          "item": "minecraft:experience_bottle",
+          "count": 4,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "tables/ember_crate",
+      "title": "Ember Crate",
+      "icon": "minecraft:campfire",
+      "rolls": 2,
+      "loot_crate": true,
+      "crate_name": "&6Ember Crate",
+      "crate_color": "#E8743B",
+      "crate_glow": true,
+      "monster_drop_chance": 2.5,
+      "boss_drop_chance": 50,
+      "entries": [
+        {
+          "id": "tables/ember_crate/coal",
+          "type": "item",
+          "item": "minecraft:coal",
+          "count": 8,
+          "weight": 4
+        },
+        {
+          "id": "tables/ember_crate/iron",
+          "type": "item",
+          "item": "minecraft:iron_nugget",
+          "count": 9,
+          "weight": 3
+        },
+        {
+          "id": "tables/ember_crate/gold",
+          "type": "item",
+          "item": "minecraft:gold_nugget",
+          "count": 9,
+          "weight": 3
+        },
+        {
+          "id": "tables/ember_crate/blaze",
+          "type": "item",
+          "item": "minecraft:blaze_powder",
+          "count": 2,
+          "weight": 1
+        },
+        {
+          "id": "tables/ember_crate/xp",
+          "type": "xp",
+          "xp": 30,
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "tables/sunfire_hoard",
+      "title": "&6Sunfire Hoard",
+      "icon": "minecraft:nether_star",
+      "entries": [
+        {
+          "id": "tables/sunfire_hoard/diamonds",
+          "type": "item",
+          "item": "minecraft:diamond",
+          "count": 5,
+          "weight": 1
+        },
+        {
+          "id": "tables/sunfire_hoard/gapple",
+          "type": "item",
+          "item": "minecraft:enchanted_golden_apple",
+          "count": 1,
+          "weight": 1
+        },
+        {
+          "id": "tables/sunfire_hoard/totem",
+          "type": "item",
+          "item": "minecraft:totem_of_undying",
+          "count": 1,
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

@@ -786,13 +786,19 @@ final class CanvasView {
             case OPEN_CHAPTER -> screen.focus(image.clickData);
             case OPEN_URL -> {
                 String url = image.clickData;
-                if (url.startsWith("https://") || url.startsWith("http://")) {
+                java.net.URI uri = null;
+                try {
+                    uri = java.net.URI.create(url);
+                } catch (IllegalArgumentException ignored) {
+                }
+                if (uri != null && (url.startsWith("https://") || url.startsWith("http://"))) {
+                    java.net.URI target = uri;
                     mc.gui.setScreen(new ConfirmLinkScreen(yes -> {
                         if (yes) {
-                            Util.getPlatform().openUri(url);
+                            Util.getPlatform().openUri(target);
                         }
                         mc.gui.setScreen(screen);
-                    }, url, true));
+                    }, target, true));
                 }
             }
             case RUN_COMMAND -> {

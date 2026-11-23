@@ -54,11 +54,16 @@ public final class ItemMatcher {
     }
 
     private static boolean fuzzy(ItemStack required, ItemStack candidate) {
-        DataComponentPatch patch = required.getComponentsPatch();
-        for (Map.Entry<DataComponentType<?>, Optional<?>> entry : patch.entrySet()) {
-            Object wanted = entry.getValue().orElse(null);
-            Object actual = candidate.get(entry.getKey());
-            if (!Objects.equals(wanted, actual)) {
+        // Every component the required stack changed from its item's defaults must match (26.3 has no patch entrySet).
+        net.minecraft.core.component.DataComponentMap defaults = required.getItem().components();
+        for (net.minecraft.core.component.TypedDataComponent<?> component : required.getComponents()) {
+            if (!Objects.equals(defaults.get(component.type()), component.value())
+                    && !Objects.equals(component.value(), candidate.get(component.type()))) {
+                return false;
+            }
+        }
+        for (net.minecraft.core.component.TypedDataComponent<?> component : defaults) {
+            if (!required.has(component.type()) && candidate.has(component.type())) {
                 return false;
             }
         }

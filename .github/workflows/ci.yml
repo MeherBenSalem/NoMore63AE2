@@ -108,7 +108,7 @@ jobs:
           LIST="net.minecraft.client.Screenshot net.minecraft.client.gui.components.toasts.Toast net.minecraft.client.gui.screens.Screen net.minecraft.client.gui.components.AbstractWidget net.minecraft.client.gui.components.EditBox net.minecraft.client.gui.components.MultiLineEditBox net.minecraft.world.entity.player.Inventory net.minecraft.server.PlayerAdvancements net.minecraft.client.gui.GuiGraphics net.minecraft.world.level.storage.loot.LootDataManager net.minecraft.client.MouseHandler net.minecraft.client.gui.components.toasts.ToastComponent"
           if [ "${WS#26.}" != "$WS" ]; then
             JP="$JAVA_HOME_25_X64/bin/javap"
-            LIST="net.minecraft.client.gui.components.EditBox net.minecraft.client.gui.components.AbstractWidget net.minecraft.ChatFormatting net.minecraft.network.chat.TextColor net.minecraft.server.ReloadableServerRegistries\$Holder net.minecraft.client.input.CharacterEvent net.minecraft.client.input.KeyEvent net.minecraft.client.gui.Gui net.minecraft.client.gui.screens.Screen net.minecraft.client.gui.GuiGraphicsExtractor net.minecraft.world.entity.player.Player net.minecraft.client.player.LocalPlayer net.minecraft.client.gui.components.toasts.ToastManager"
+            LIST="net.minecraft.world.level.StructureManager net.minecraft.core.component.DataComponentPatch net.minecraft.client.gui.screens.ConfirmLinkScreen net.minecraft.util.Util\$OS net.minecraft.server.ReloadableServerRegistries\$Holder net.minecraft.world.item.ItemStack"
           fi
           for c in $LIST; do
             echo "=== $c"

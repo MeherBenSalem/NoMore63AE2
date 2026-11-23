@@ -651,12 +651,18 @@ final class QuestPanel {
             return;
         }
         Minecraft mc = screen.mc();
+        java.net.URI uri;
+        try {
+            uri = java.net.URI.create(url);
+        } catch (IllegalArgumentException e) {
+            return;
+        }
         mc.gui.setScreen(new ConfirmLinkScreen(yes -> {
             if (yes) {
-                Util.getPlatform().openUri(url);
+                Util.getPlatform().openUri(uri);
             }
             mc.gui.setScreen(screen);
-        }, url, true));
+        }, uri, true));
     }
 
     // ------------------------------------------------------------------ Input

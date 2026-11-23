@@ -59,7 +59,7 @@ public class FluidTask extends Task {
                     ctx.addProgress(1000);
                     ItemStack empty = new ItemStack(Items.BUCKET);
                     if (!inventory.add(empty)) {
-                        ctx.player().drop(empty, false);
+                        ctx.player().drop(empty, false, net.minecraft.util.Prediction.SERVER_ONLY);
                     }
                     changed = true;
                 }

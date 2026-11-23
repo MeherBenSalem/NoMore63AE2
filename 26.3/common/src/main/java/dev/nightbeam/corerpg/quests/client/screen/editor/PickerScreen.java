@@ -358,7 +358,7 @@ public class PickerScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         int key = event.key();
-        int scan = event.scancode();
+        int scan = event.keycode();
         int modifiers = event.modifiers();
         if ((key == InputConstants.KEY_RETURN || key == InputConstants.KEY_NUMPADENTER) && !filtered.isEmpty()) {
             pick(filtered.getFirst());

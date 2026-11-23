@@ -883,7 +883,7 @@ public class TeamScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         int keyCode = event.key();
-        int scanCode = event.scancode();
+        int scanCode = event.keycode();
         int modifiers = event.modifiers();
         if (keyCode == 256 && confirm != null) {
             confirm = null;

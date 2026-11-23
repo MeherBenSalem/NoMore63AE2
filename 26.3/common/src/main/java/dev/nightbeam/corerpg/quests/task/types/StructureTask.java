@@ -52,19 +52,16 @@ public class StructureTask extends Task {
         BlockPos pos = ctx.player().blockPosition();
         Registry<Structure> registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
         if (structure.tag()) {
-            Optional<HolderSet.Named<Structure>> tag = registry.get(TagKey.create(Registries.STRUCTURE, structure.id()));
-            if (tag.isEmpty()) {
+            TagKey<Structure> key = TagKey.create(Registries.STRUCTURE, structure.id());
+            if (registry.get(key).isEmpty()) {
                 return;
             }
-            for (Holder<Structure> holder : tag.get()) {
-                if (level.structureManager().getStructureWithPieceAt(pos, holder.value()).isValid()) {
-                    ctx.setProgress(1);
-                    return;
-                }
+            if (level.structureManager().getStructureWithPieceAt(pos, key).isValid()) {
+                ctx.setProgress(1);
             }
         } else {
-            Structure s = registry.getValue(structure.id());
-            if (s != null && level.structureManager().getStructureWithPieceAt(pos, s).isValid()) {
+            Optional<Holder.Reference<Structure>> s = registry.get(structure.id());
+            if (s.isPresent() && level.structureManager().getStructureWithPieceAt(pos, HolderSet.direct(s.get())).isValid()) {
                 ctx.setProgress(1);
             }
         }

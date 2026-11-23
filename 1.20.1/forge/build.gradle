@@ -1,0 +1,55 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+
+    validateAccessTransformers = true
+
+    def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers = ["src/main/resources/META-INF/accesstransformer.cfg"]
+    }
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+    runs {
+        configureEach {
+            ideName = "Forge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+        }
+        client {
+            client()
+            gameDirectory = project.file('runs/client')
+        }
+        server {
+            server()
+            gameDirectory = project.file('runs/server')
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+// The common mixins are compiled here too: the refmap maps them to SRG names for the reobfuscated jar.
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
+}
+
+dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    // @Nullable in the common code; Forge's userdev does not bring it (the common project gets it from mcp_config).
+    compileOnly 'org.jetbrains:annotations:24.0.1'
+}
+
+jar {
+    manifest.attributes(['MixinConfigs': "${mod_id}.mixins.json"])
+    finalizedBy('reobfJar')
+}
