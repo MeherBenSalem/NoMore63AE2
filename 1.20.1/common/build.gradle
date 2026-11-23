@@ -47,6 +47,10 @@ sourceSets.test.runtimeClasspath += sourceSets.main.compileClasspath
 
 tasks.named('test', Test) {
     useJUnitPlatform()
+    // 1.20.1 (legacyforge): vanilla assets such as en_us.json, which Bootstrap needs, live in a separate jar.
+    classpath += fileTree(layout.buildDirectory.dir('moddev/artifacts')) {
+        include '*minecraft-resources*.jar'
+    }
     maxHeapSize = '2g'
     testLogging {
         events 'passed', 'skipped', 'failed'
