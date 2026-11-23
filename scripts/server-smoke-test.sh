@@ -168,8 +168,9 @@ echo "Commands OK: $oks of $EXPECTED_OK; mixin targets loaded: $loaded of $TARGE
 [ "$oks" -ge "$EXPECTED_OK" ] || { echo "::error::not every command check passed"; fail=1; }
 [ "$loaded" -ge "$TARGET_COUNT" ] || { echo "::error::not every mixin target class loaded"; fail=1; }
 # Errors, warnings and exceptions that mention the mod (its id, its logger name, its package or the smoke pack).
+# (Mixin's "refmap could not be read" warning is expected in a dev environment, where names are not remapped.)
 if grep -n -E "(ERROR|WARN|Exception|Caused by|Failed|Couldn't|Unknown|Errors in)" "$LOG" \
-    | grep -v "JAVA_TOOL_OPTIONS" \
+    | grep -v -E "JAVA_TOOL_OPTIONS|Reference map '$MOD.refmap.json' .* could not be read" \
     | grep -i -E "$MOD|Core RPG - Quests Engine|dev\.nightbeam\.corerpg|$NS"; then
   echo "::error::error or warning mentioning the mod"; fail=1
 fi
