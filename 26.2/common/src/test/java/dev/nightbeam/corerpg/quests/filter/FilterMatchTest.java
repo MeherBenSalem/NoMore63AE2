@@ -74,7 +74,10 @@ class FilterMatchTest extends McTest {
         assertFalse(matches("component(minecraft:custom_name)", new ItemStack(Items.IRON_SWORD)));
         assertFalse(matches("component(minecraft:not_a_component)", named));
         assertTrue(matches("rarity(common)", new ItemStack(Items.STONE)));
-        assertTrue(matches("rarity(epic)", new ItemStack(Items.ENCHANTED_GOLDEN_APPLE)));
+        // 26.x: vanilla item rarities moved, so the test sets the rarity itself.
+        ItemStack epic = new ItemStack(Items.STICK);
+        epic.set(DataComponents.RARITY, net.minecraft.world.item.Rarity.EPIC);
+        assertTrue(matches("rarity(epic)", epic));
         assertFalse(matches("enchanted()", new ItemStack(Items.IRON_SWORD)));
     }
 

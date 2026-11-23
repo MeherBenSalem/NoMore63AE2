@@ -96,7 +96,7 @@ public final class VeinMining {
             return;
         }
         State st = STATES.get(player.getUUID());
-        HitResult hit = player.pick(player.blockInteractionRange() + 1, 1.0F, false);
+        HitResult hit = player.pick((player.isCreative() ? 5.0 : 4.5) + 1, 1.0F, false);
         Direction face = hit instanceof BlockHitResult bhr && bhr.getBlockPos().equals(pos) ? bhr.getDirection() : Direction.UP;
         List<BlockPos> positions = plan(player.level(), player, pos, state, face, st.shape, CoreConfig.SERVER.veinMaxBlocks.get());
         if (positions.size() > 1) {

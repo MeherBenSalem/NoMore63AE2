@@ -293,7 +293,7 @@ public final class Filters {
 
         @Override
         public String toExpression() {
-            return "rarity(" + rarity.getSerializedName() + ")";
+            return "rarity(" + rarity.name().toLowerCase(java.util.Locale.ROOT) + ")";
         }
     }
 

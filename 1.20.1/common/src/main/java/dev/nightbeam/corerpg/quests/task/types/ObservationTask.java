@@ -92,7 +92,7 @@ public class ObservationTask extends Task {
     }
 
     public boolean isObserving(ServerPlayer player) {
-        double reach = range > 0 ? range : target == Target.BLOCK ? player.blockInteractionRange() : player.entityInteractionRange();
+        double reach = range > 0 ? range : target == Target.BLOCK ? (player.isCreative() ? 5.0 : 4.5) : (player.isCreative() ? 6.0 : 3.0);
         Vec3 eye = player.getEyePosition();
         Vec3 end = eye.add(player.getViewVector(1.0F).scale(reach));
         if (target == Target.BLOCK) {

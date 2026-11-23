@@ -89,6 +89,6 @@ public final class Icon {
 
     @Override
     public int hashCode() {
-        return texture != null ? texture.hashCode() : ItemStack.hashItemAndComponents(stack);
+        return texture != null ? texture.hashCode() : java.util.Objects.hash(stack.getItem(), stack.getTag());
     }
 }

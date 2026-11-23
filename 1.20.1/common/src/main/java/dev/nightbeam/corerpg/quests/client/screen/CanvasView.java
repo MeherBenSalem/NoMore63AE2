@@ -1013,7 +1013,7 @@ final class CanvasView {
                     m.add(Component.translatable("corerpg_quests.gui.claim_all"), "claim_all", () -> Services.PLATFORM.sendToServer(new Payloads.ClaimAll(q.id())));
                 }
                 if (!editing) {
-                    break;
+                    return m;
                 }
                 m.separator();
                 m.add(Component.translatable("corerpg_quests.gui.edit"), "edit", () -> mc.setScreen(new PropertyEditorScreen(screen, q)));

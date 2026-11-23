@@ -64,7 +64,7 @@ public final class FilterTypes {
         register("rarity", List.of(), "rarity(name)", "rarity(epic)", (a, p) -> {
             String name = text(single(a, p, "rarity")).toLowerCase(Locale.ROOT);
             for (Rarity r : Rarity.values()) {
-                if (r.getSerializedName().equals(name)) {
+                if (r.name().toLowerCase(java.util.Locale.ROOT).equals(name)) {
                     return new Filters.RarityIs(r);
                 }
             }

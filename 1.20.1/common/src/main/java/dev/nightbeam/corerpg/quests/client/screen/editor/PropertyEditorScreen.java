@@ -392,7 +392,7 @@ public class PropertyEditorScreen extends dev.nightbeam.corerpg.quests.client.sc
         EditBox box = new EditBox(font, 0, 0, w, 16, label(prop.key()));
         box.setMaxLength(32000);
         box.setValue(display(prop));
-        box.moveCursorToStart(false);
+        box.moveCursorToStart();
         box.setResponder(s -> {
             try {
                 Object value = parser.parse(s.trim());

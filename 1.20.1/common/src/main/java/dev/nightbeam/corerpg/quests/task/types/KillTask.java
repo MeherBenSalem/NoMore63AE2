@@ -22,7 +22,7 @@ import java.util.Set;
 
 /** Kill entities of a type or tag, optionally only ones with a given custom name (named bosses). */
 public class KillTask extends CountTask {
-    public Ref entity = new Ref(net.minecraft.resources.new ResourceLocation("zombie"), false);
+    public Ref entity = new Ref(new net.minecraft.resources.ResourceLocation("zombie"), false);
     public String customName = "";
 
     @Override
