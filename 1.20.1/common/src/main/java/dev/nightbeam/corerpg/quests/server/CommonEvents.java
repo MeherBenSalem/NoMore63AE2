@@ -18,7 +18,28 @@ public final class CommonEvents {
     }
 
     public static void serverStarting(MinecraftServer server) {
+        qaLoadClasses();
         ServerQuests.onServerStarting(server);
+    }
+
+    /**
+     * QA (dev servers only, like the other corerpg_quests.qa.* switches): loads the comma-separated classes named in
+     * {@code corerpg_quests.qa.load_classes} so their mixins are applied at startup. With no player online, classes
+     * such as ServerPlayer would otherwise never load, and a broken injection would only show when someone joins.
+     */
+    private static void qaLoadClasses() {
+        String names = System.getProperty("corerpg_quests.qa.load_classes", "");
+        for (String name : names.split(",")) {
+            if (name.isBlank()) {
+                continue;
+            }
+            try {
+                Class.forName(name.trim(), false, CommonEvents.class.getClassLoader());
+                dev.nightbeam.corerpg.quests.CoreQuests.LOG.info("QA: loaded {}", name.trim());
+            } catch (Throwable t) {
+                dev.nightbeam.corerpg.quests.CoreQuests.LOG.error("QA: could not load {}", name.trim(), t);
+            }
+        }
     }
 
     public static void serverStopped() {

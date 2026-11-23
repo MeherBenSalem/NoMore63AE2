@@ -81,3 +81,6 @@ dump.gradle
 tmpDump.gradle
 target/
 **/runs/
+
+# Dev-server smoke test logs (scripts/server-smoke-test.sh)
+server-smoke-*.log
