@@ -81,47 +81,10 @@ jobs:
             21
       - uses: gradle/actions/setup-gradle@v4
       - name: Build ${{ matrix.ws }} and run its unit tests
-        if: hashFiles(format('{0}/settings.gradle', matrix.ws)) != ''
-        shell: bash
         run: |
-          # TEMP (porting): run the workspace wrapper directly until all 4 workspaces exist for the root build.
-          case "${{ matrix.ws }}" in 26.*) export JAVA_HOME="$JAVA_HOME_25_X64" ;; esac
-          cd "${{ matrix.ws }}"
-          chmod +x gradlew
-          ./gradlew build --no-daemon --continue -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64,JAVA_HOME_21_X64,JAVA_HOME_25_X64
-      # TEMP (porting): print the Minecraft signatures the port depends on.
-      - name: API dump
-        if: always()
-        shell: bash
-        env:
-          WS: ${{ matrix.ws }}
-        run: |
-          set +e
-          J=""
-          for j in $(find ~/.gradle/caches "$GITHUB_WORKSPACE/$WS" -name '*.jar' -size +8M 2>/dev/null); do
-            if unzip -l "$j" 2>/dev/null | grep -q 'net/minecraft/client/MouseHandler.class'; then J="$j"; break; fi
-          done
-          echo "jar: $J"
-          [ -n "$J" ] || exit 0
-          python3 scripts/tmp_api_dump.py "$J" "$WS"
-          JP="$JAVA_HOME_21_X64/bin/javap"
-          LIST="net.minecraft.client.Screenshot net.minecraft.client.gui.components.toasts.Toast net.minecraft.client.gui.screens.Screen net.minecraft.client.gui.components.AbstractWidget net.minecraft.client.gui.components.EditBox net.minecraft.client.gui.components.MultiLineEditBox net.minecraft.world.entity.player.Inventory net.minecraft.server.PlayerAdvancements net.minecraft.client.gui.GuiGraphics net.minecraft.world.level.storage.loot.LootDataManager net.minecraft.client.MouseHandler net.minecraft.client.gui.components.toasts.ToastComponent"
-          if [ "${WS#26.}" != "$WS" ]; then
-            JP="$JAVA_HOME_25_X64/bin/javap"
-            LIST="net.minecraft.world.level.StructureManager net.minecraft.core.component.DataComponentPatch net.minecraft.client.gui.screens.ConfirmLinkScreen net.minecraft.util.Util\$OS net.minecraft.server.ReloadableServerRegistries\$Holder net.minecraft.world.item.ItemStack"
-          fi
-          for c in $LIST; do
-            echo "=== $c"
-            "$JP" -p -cp "$J" "$c" 2>&1 | grep -v -e '^Compiled' -e 'lambda[$]'
-          done
-          echo "=== Minecraft (filtered)"
-          "$JP" -p -cp "$J" net.minecraft.client.Minecraft 2>&1 | grep -E 'Screen|gui|hasControlDown|hasShiftDown|hasAltDown|oast'
-          echo "=== BlockStateBase (filtered)"
-          "$JP" -p -cp "$J" 'net.minecraft.world.level.block.state.BlockBehaviour$BlockStateBase' 2>&1 | grep -E 'Tag|tags|Holder|getCloneItemStack'
-          echo "=== EntityType (filtered)"
-          "$JP" -p -cp "$J" net.minecraft.world.entity.EntityType 2>&1 | grep -E ' is[(]|Holder'
+          chmod +x gradlew "${{ matrix.ws }}/gradlew"
+          ./gradlew build${{ matrix.key }} --no-daemon
       - uses: actions/upload-artifact@v4
-        if: hashFiles(format('{0}/settings.gradle', matrix.ws)) != ''
         with:
           name: jars-${{ matrix.ws }}
           path: ${{ matrix.ws }}/*/build/libs/corerpg_quests-*.jar
@@ -141,11 +104,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p ci-jars
-          find built -name 'corerpg_quests-*.jar' -exec cp -f -t ci-jars/ {} +
-          ls -l ci-jars
+          mkdir -p fresh ci-jars
+          find built -name 'corerpg_quests-*.jar' -exec cp -f -t fresh/ {} +
           version="$(python3 scripts/check_targets.py version)"
-          python3 scripts/check_targets.py jars --version "$version" --dir ci-jars --list-file ci-jars.txt
+          python3 scripts/check_targets.py jars --version "$version" --dir fresh --list-file ci-jars.txt
+          xargs -a ci-jars.txt cp -f -t ci-jars/
+          ls -l ci-jars
       - uses: actions/upload-artifact@v4
         with:
           name: corerpg-quests-jars
