@@ -113,7 +113,7 @@ public final class ServerPacketHandler {
         try {
             TeamActions.run(sq, player, p.action(), p.arg());
         } catch (TeamException e) {
-            player.displayClientMessage(e.component().copy().withStyle(ChatFormatting.RED), false);
+            player.sendSystemMessage(e.component().copy().withStyle(ChatFormatting.RED));
             sq.sendState(player);
         }
     }
@@ -130,7 +130,7 @@ public final class ServerPacketHandler {
         }
         String error = FilterParser.validate(filter);
         if (error != null) {
-            player.displayClientMessage(Component.translatable("corerpg_quests.filter.invalid", error).withStyle(ChatFormatting.RED), false);
+            player.sendSystemMessage(Component.translatable("corerpg_quests.filter.invalid", error).withStyle(ChatFormatting.RED));
             return;
         }
         stack.set(ModRegistry.FILTER_COMPONENT.get(), filter);

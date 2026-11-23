@@ -868,7 +868,7 @@ final class CanvasView {
                 if (selection.size() == 1) {
                     QuestObject o = screen.book().get(selection.iterator().next());
                     if (o != null) {
-                        screen.mc().setScreen(new PropertyEditorScreen(screen, o));
+                        screen.mc().gui.setScreen(new PropertyEditorScreen(screen, o));
                         return true;
                     }
                 }
@@ -934,7 +934,7 @@ final class CanvasView {
         }
         clip.add("quests", quests);
         screen.mc().keyboardHandler.setClipboard(JsonUtil.COMPACT.toJson(clip));
-        Minecraft.getInstance().gui.setOverlayMessage(Component.translatable("corerpg_quests.gui.copied", quests.size()), false);
+        Minecraft.getInstance().gui.hud.setOverlayMessage(Component.translatable("corerpg_quests.gui.copied", quests.size()), false);
     }
 
     private boolean clipboardHasQuests() {

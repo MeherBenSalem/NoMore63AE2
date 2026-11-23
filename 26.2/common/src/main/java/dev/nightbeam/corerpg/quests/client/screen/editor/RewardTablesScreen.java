@@ -198,7 +198,7 @@ public class RewardTablesScreen extends Screen {
         }
         super.extractRenderState(g, mx, my, partialTick);
         if (menu != null) {
-            menu.render(g, font, mouseX, mouseY, width, height);
+            menu.extractRenderState(g, font, mouseX, mouseY, width, height);
         } else if (tooltip != null) {
             g.setComponentTooltipForNextFrame(font, tooltip, mouseX, mouseY);
         }

@@ -48,9 +48,7 @@ public final class FilterPreview {
         }
         if (player != null) {
             Inventory inventory = player.getInventory();
-            List<ItemStack> carried = new ArrayList<>(inventory.items);
-            carried.addAll(inventory.armor);
-            carried.addAll(inventory.offhand);
+            List<ItemStack> carried = dev.nightbeam.corerpg.quests.task.types.ItemTask.allSlots(inventory);
             for (ItemStack stack : carried) {
                 if (!stack.isEmpty() && test(filter, stack) && !containsSame(stack, shown.size())) {
                     total++;

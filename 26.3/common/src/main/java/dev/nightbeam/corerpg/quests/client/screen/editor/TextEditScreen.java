@@ -83,7 +83,7 @@ public class TextEditScreen extends Screen {
             if (c == '\n') {
                 editor.keyPressed(new KeyEvent(InputConstants.KEY_RETURN, 0, 0));
             } else {
-                editor.charTyped(new CharacterEvent(c, 0));
+                editor.charTyped(new CharacterEvent(c));
             }
         }
         setFocused(editor);

@@ -26,7 +26,7 @@ public final class VeinRules {
     public static List<TagKey<Block>> mergeTags(BlockState origin) {
         List<String> patterns = CoreConfig.SERVER.veinMergeTags.get();
         List<TagKey<Block>> result = new ArrayList<>();
-        origin.getTags().forEach(tag -> {
+        origin.getBlockHolder().tags().forEach(tag -> {
             String id = tag.location().toString();
             for (String pattern : patterns) {
                 if (matchesPattern(id, pattern)) {

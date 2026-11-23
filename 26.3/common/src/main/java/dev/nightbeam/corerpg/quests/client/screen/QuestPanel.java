@@ -162,7 +162,7 @@ final class QuestPanel {
         }
         if (screen.editing()) {
             buttonsLeft = button(g, buttonsLeft, "edit", Component.translatable("corerpg_quests.gui.edit_quest"), Theme.GOLD, mouseX, mouseY,
-                    () -> screen.mc().setScreen(new PropertyEditorScreen(screen, quest)));
+                    () -> screen.mc().gui.setScreen(new PropertyEditorScreen(screen, quest)));
             buttonsLeft = button(g, buttonsLeft, "add", Component.translatable("corerpg_quests.gui.add_task"), Theme.GOLD, mouseX, mouseY, this::addTaskMenu);
             buttonsLeft = button(g, buttonsLeft, "gift", Component.translatable("corerpg_quests.gui.add_reward"), Theme.GOLD, mouseX, mouseY, this::addRewardMenu);
         }
@@ -596,14 +596,14 @@ final class QuestPanel {
     private void claim(Reward reward) {
         screen.click();
         if (reward.needsChoice() && reward instanceof TableReward tr) {
-            screen.mc().setScreen(new ChoiceScreen(screen, tr));
+            screen.mc().gui.setScreen(new ChoiceScreen(screen, tr));
         } else {
             Services.PLATFORM.sendToServer(new Payloads.ClaimReward(reward.id(), -1));
         }
     }
 
     private void edit(QuestObject object) {
-        screen.mc().setScreen(new PropertyEditorScreen(screen, object));
+        screen.mc().gui.setScreen(new PropertyEditorScreen(screen, object));
     }
 
     private void rowMenu(QuestObject object, int index, int size) {

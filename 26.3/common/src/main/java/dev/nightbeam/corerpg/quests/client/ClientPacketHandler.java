@@ -81,9 +81,9 @@ public final class ClientPacketHandler {
         }
         if (CoreConfig.CLIENT.sounds.get() && mc.player != null) {
             switch (kind) {
-                case QUEST_COMPLETED -> mc.player.playSound(SoundEvents.PLAYER_LEVELUP.value(), 0.6F, 1.2F);
-                case CHAPTER_COMPLETED, BOOK_COMPLETED -> mc.player.playSound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE.value(), 0.8F, 1.0F);
-                case TASK_COMPLETED -> mc.player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP.value(), 0.4F, 1.4F);
+                case QUEST_COMPLETED -> mc.player.playSound(SoundEvents.PLAYER_LEVELUP, 0.6F, 1.2F);
+                case CHAPTER_COMPLETED, BOOK_COMPLETED -> mc.player.playSound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 0.8F, 1.0F);
+                case TASK_COMPLETED -> mc.player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.4F, 1.4F);
                 default -> {
                 }
             }

@@ -82,13 +82,13 @@ public class QuestBookScreen extends Screen {
         QuestBook book = ClientQuests.book();
         if (book == null || !ClientQuests.ready()) {
             if (mc.player != null) {
-                mc.player.displayClientMessage(Component.translatable("corerpg_quests.gui.not_ready").withStyle(ChatFormatting.RED), true);
+                mc.gui.hud.setOverlayMessage(Component.translatable("corerpg_quests.gui.not_ready").withStyle(ChatFormatting.RED), false);
             }
             return;
         }
         if (book.disableGui && !ClientQuests.canEdit()) {
             if (mc.player != null) {
-                mc.player.displayClientMessage(Component.translatable("corerpg_quests.gui.disabled"), true);
+                mc.gui.hud.setOverlayMessage(Component.translatable("corerpg_quests.gui.disabled"), false);
             }
             return;
         }
@@ -375,7 +375,7 @@ public class QuestBookScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         tooltip = null;
-        renderBackground(g, mouseX, mouseY, partialTick);
+        extractBackground(g, mouseX, mouseY, partialTick);
         boolean blocked = panel != null || menu != null;
         int mx = blocked ? -1000 : mouseX;
         int my = blocked ? -1000 : mouseY;
@@ -394,7 +394,7 @@ public class QuestBookScreen extends Screen {
             g.pose().popMatrix();
         }
         if (menu != null) {
-            menu.render(g, font, mouseX, mouseY, width, height);
+            menu.extractRenderState(g, font, mouseX, mouseY, width, height);
         }
         if (tooltip != null && menu == null) {
             g.pose().pushMatrix();
@@ -430,7 +430,7 @@ public class QuestBookScreen extends Screen {
         g.fill(sx - 2, 5, search.getX() + search.getWidth() + 2, 19, 0x80000000);
         Theme.outline(g, sx - 2, 5, search.getWidth() + 18, 14, search.isFocused() ? Theme.EMBER : Theme.LINE);
         GuiIcons.draw(g, "search", sx, 7, 10, Theme.MUTED);
-        search.render(g, mouseX, mouseY, 0);
+        search.extractRenderState(g, mouseX, mouseY, 0);
         for (IconButton b : buttons) {
             if (b.y < TOP) {
                 drawButton(g, b, mouseX, mouseY);
@@ -827,7 +827,6 @@ public class QuestBookScreen extends Screen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        int modifiers = event.modifiers();
         if (search.isFocused()) {
             return search.charTyped(event);
         }

@@ -115,8 +115,8 @@ public class TeamScreen extends Screen {
     }
 
     private static int rankColor(TeamRank rank) {
-        Integer color = rank.color.getColor();
-        return color == null ? Theme.TEXT : color | 0xFF000000;
+        net.minecraft.network.chat.TextColor color = net.minecraft.network.chat.TextColor.fromLegacyFormat(rank.color);
+        return color == null ? Theme.TEXT : color.getValue() | 0xFF000000;
     }
 
     private static Set<UUID> onlineIds() {
@@ -330,7 +330,7 @@ public class TeamScreen extends Screen {
         }
 
         int rx = leftX + colW + 6;
-        EditBox hex = new EditBox(font, rx + 30, settingsHexY() + 1, 60, 16, t("settings.hex"));
+        FilteredEditBox hex = new FilteredEditBox(font, rx + 30, settingsHexY() + 1, 60, 16, t("settings.hex"));
         hex.setMaxLength(7);
         hex.setValue(draftHex);
         hex.setFilter(s -> s.matches("#?[0-9a-fA-F]{0,6}"));

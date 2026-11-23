@@ -10,10 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -86,13 +83,13 @@ public final class VeinMining {
         }
         ItemStack tool = player.getMainHandItem();
         if (CoreConfig.SERVER.veinRequireTool.get() && !tool.isDamageableItem()) {
-            player.displayClientMessage(Component.translatable("corerpg_quests.vein.need_tool").withStyle(ChatFormatting.RED), true);
+            player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.need_tool").withStyle(ChatFormatting.RED));
             return;
         }
         long now = player.level().getGameTime();
         Long readyAt = COOLDOWNS.get(player.getUUID());
         if (readyAt != null && now < readyAt) {
-            player.displayClientMessage(Component.translatable("corerpg_quests.vein.cooldown", (readyAt - now + 19) / 20).withStyle(ChatFormatting.RED), true);
+            player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.cooldown", (readyAt - now + 19) / 20).withStyle(ChatFormatting.RED));
             return;
         }
         State st = STATES.get(player.getUUID());
@@ -147,15 +144,15 @@ public final class VeinMining {
                 ItemStack tool = player.getMainHandItem();
                 if (!creative) {
                     if (preventBreak && tool.isDamageableItem() && tool.getMaxDamage() - tool.getDamageValue() <= 1) {
-                        player.displayClientMessage(Component.translatable("corerpg_quests.vein.tool_saved").withStyle(ChatFormatting.YELLOW), true);
+                        player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.tool_saved").withStyle(ChatFormatting.YELLOW));
                         break;
                     }
                     if (exhaustion > 0 && player.getFoodData().getFoodLevel() <= 0) {
-                        player.displayClientMessage(Component.translatable("corerpg_quests.vein.too_hungry").withStyle(ChatFormatting.RED), true);
+                        player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.too_hungry").withStyle(ChatFormatting.RED));
                         break;
                     }
                     if (xpCost > 0 && player.totalExperience < xpCost) {
-                        player.displayClientMessage(Component.translatable("corerpg_quests.vein.no_xp").withStyle(ChatFormatting.RED), true);
+                        player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.no_xp").withStyle(ChatFormatting.RED));
                         break;
                     }
                 }
@@ -218,11 +215,12 @@ public final class VeinMining {
             return false;
         }
         ItemStack held = player.getMainHandItem();
-        if (!(held.getItem() instanceof AxeItem || held.getItem() instanceof ShovelItem || held.getItem() instanceof HoeItem)) {
+        // 26.3 removed AxeItem/ShovelItem/HoeItem; tools are recognised by their item tags.
+        if (!(held.is(net.minecraft.tags.ItemTags.AXES) || held.is(net.minecraft.tags.ItemTags.SHOVELS) || held.is(net.minecraft.tags.ItemTags.HOES))) {
             return false;
         }
         List<BlockPos> area;
-        if (held.getItem() instanceof AxeItem) {
+        if (held.is(net.minecraft.tags.ItemTags.AXES)) {
             Predicate<BlockState> same = VeinRules.sameAs(state);
             area = VeinShapes.collect(VeinShape.SHAPELESS, origin, hit.getDirection(), player.getDirection(),
                     p -> same.test(level.getBlockState(p)), p -> false, CoreConfig.SERVER.veinMaxBlocks.get());
@@ -272,7 +270,7 @@ public final class VeinMining {
             return;
         }
         List<ItemStack> drops = Block.getDrops(state, level, pos, null, player, player.getMainHandItem());
-        ItemStack seed = state.getBlock().getCloneItemStack(level, pos, state);
+        ItemStack seed = state.getCloneItemStack(level, pos, false);
         boolean replanted = false;
         for (ItemStack drop : drops) {
             if (!replanted && !seed.isEmpty() && ItemStack.isSameItem(drop, seed)) {

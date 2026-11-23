@@ -130,11 +130,18 @@ public class ItemTask extends ItemCriteriaTask {
         }
     }
 
-    static List<ItemStack> allSlots(Inventory inventory) {
-        List<ItemStack> list = new java.util.ArrayList<>(inventory.items.size() + 5);
-        list.addAll(inventory.items);
-        list.addAll(inventory.armor);
-        list.addAll(inventory.offhand);
+    private static final net.minecraft.world.entity.EquipmentSlot[] EQUIPMENT_ORDER = {
+            net.minecraft.world.entity.EquipmentSlot.FEET, net.minecraft.world.entity.EquipmentSlot.LEGS,
+            net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.HEAD,
+            net.minecraft.world.entity.EquipmentSlot.OFFHAND};
+
+    public static List<ItemStack> allSlots(Inventory inventory) {
+        // 26.x keeps armour and the offhand in the player's equipment; same order as before (main, armour feet->head, offhand).
+        List<ItemStack> list = new java.util.ArrayList<>(inventory.getNonEquipmentItems().size() + 5);
+        list.addAll(inventory.getNonEquipmentItems());
+        for (net.minecraft.world.entity.EquipmentSlot slot : EQUIPMENT_ORDER) {
+            list.add(inventory.player.getItemBySlot(slot));
+        }
         return list;
     }
 }

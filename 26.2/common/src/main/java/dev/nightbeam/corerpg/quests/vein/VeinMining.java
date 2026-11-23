@@ -86,13 +86,13 @@ public final class VeinMining {
         }
         ItemStack tool = player.getMainHandItem();
         if (CoreConfig.SERVER.veinRequireTool.get() && !tool.isDamageableItem()) {
-            player.displayClientMessage(Component.translatable("corerpg_quests.vein.need_tool").withStyle(ChatFormatting.RED), true);
+            player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.need_tool").withStyle(ChatFormatting.RED));
             return;
         }
         long now = player.level().getGameTime();
         Long readyAt = COOLDOWNS.get(player.getUUID());
         if (readyAt != null && now < readyAt) {
-            player.displayClientMessage(Component.translatable("corerpg_quests.vein.cooldown", (readyAt - now + 19) / 20).withStyle(ChatFormatting.RED), true);
+            player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.cooldown", (readyAt - now + 19) / 20).withStyle(ChatFormatting.RED));
             return;
         }
         State st = STATES.get(player.getUUID());
@@ -147,15 +147,15 @@ public final class VeinMining {
                 ItemStack tool = player.getMainHandItem();
                 if (!creative) {
                     if (preventBreak && tool.isDamageableItem() && tool.getMaxDamage() - tool.getDamageValue() <= 1) {
-                        player.displayClientMessage(Component.translatable("corerpg_quests.vein.tool_saved").withStyle(ChatFormatting.YELLOW), true);
+                        player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.tool_saved").withStyle(ChatFormatting.YELLOW));
                         break;
                     }
                     if (exhaustion > 0 && player.getFoodData().getFoodLevel() <= 0) {
-                        player.displayClientMessage(Component.translatable("corerpg_quests.vein.too_hungry").withStyle(ChatFormatting.RED), true);
+                        player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.too_hungry").withStyle(ChatFormatting.RED));
                         break;
                     }
                     if (xpCost > 0 && player.totalExperience < xpCost) {
-                        player.displayClientMessage(Component.translatable("corerpg_quests.vein.no_xp").withStyle(ChatFormatting.RED), true);
+                        player.sendOverlayMessage(Component.translatable("corerpg_quests.vein.no_xp").withStyle(ChatFormatting.RED));
                         break;
                     }
                 }
@@ -272,7 +272,7 @@ public final class VeinMining {
             return;
         }
         List<ItemStack> drops = Block.getDrops(state, level, pos, null, player, player.getMainHandItem());
-        ItemStack seed = state.getBlock().getCloneItemStack(level, pos, state);
+        ItemStack seed = state.getCloneItemStack(level, pos, false);
         boolean replanted = false;
         for (ItemStack drop : drops) {
             if (!replanted && !seed.isEmpty() && ItemStack.isSameItem(drop, seed)) {

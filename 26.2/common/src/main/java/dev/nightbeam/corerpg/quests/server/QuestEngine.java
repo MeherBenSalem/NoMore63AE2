@@ -513,7 +513,7 @@ public final class QuestEngine {
         if (!book.lootCrateDrops || !(killed instanceof LivingEntity living) || killed instanceof Player) {
             return;
         }
-        boolean boss = killed.getType().is(BOSSES);
+        boolean boss = killed.getType().builtInRegistryHolder().is(BOSSES);
         boolean monster = !boss && killed instanceof Enemy;
         for (RewardTable table : book.tables) {
             if (!table.lootCrate) {
@@ -537,7 +537,7 @@ public final class QuestEngine {
         long now = System.currentTimeMillis();
         long readyAt = progress.emergencyUsed(player.getUUID()) + book.emergencyItemsCooldown * 1000L;
         if (now < readyAt) {
-            player.displayClientMessage(Component.translatable("corerpg_quests.emergency.cooldown", TextUtil.duration((readyAt - now) / 1000)), true);
+            player.sendOverlayMessage(Component.translatable("corerpg_quests.emergency.cooldown", TextUtil.duration((readyAt - now) / 1000)));
             return false;
         }
         progress.setEmergencyUsed(player.getUUID(), now);

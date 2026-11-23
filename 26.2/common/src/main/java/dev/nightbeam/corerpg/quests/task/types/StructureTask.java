@@ -63,7 +63,7 @@ public class StructureTask extends Task {
                 }
             }
         } else {
-            Structure s = registry.get(structure.id());
+            Structure s = registry.getValue(structure.id());
             if (s != null && level.structureManager().getStructureWithPieceAt(pos, s).isValid()) {
                 ctx.setProgress(1);
             }

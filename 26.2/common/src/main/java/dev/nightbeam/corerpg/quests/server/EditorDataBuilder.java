@@ -37,7 +37,7 @@ final class EditorDataBuilder {
         json.add("biome", array(keys(server.registryAccess().lookupOrThrow(Registries.BIOME))));
         json.add("biome_tag", array(tags(server.registryAccess().lookupOrThrow(Registries.BIOME).listTagIds().map(t -> t.location()))));
         TreeSet<String> loot = new TreeSet<>();
-        server.reloadableRegistries().getKeys(Registries.LOOT_TABLE).forEach(id -> loot.add(id.toString()));
+        server.reloadableRegistries().lookup().lookupOrThrow(Registries.LOOT_TABLE).listElementIds().forEach(key -> loot.add(key.identifier().toString()));
         json.add("loot_table", array(loot));
         TreeSet<String> dims = new TreeSet<>();
         for (ResourceKey<Level> key : server.levelKeys()) {

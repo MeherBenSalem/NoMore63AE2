@@ -63,14 +63,14 @@ public class LootCrateItem extends Item {
         ServerQuests quests = ServerQuests.getOrNull();
         RewardTable table = quests == null ? null : table(stack, quests.book());
         if (table == null) {
-            player.displayClientMessage(Component.translatable("item.corerpg_quests.loot_crate.missing").withStyle(ChatFormatting.RED), true);
+            serverPlayer.sendOverlayMessage(Component.translatable("item.corerpg_quests.loot_crate.missing").withStyle(ChatFormatting.RED));
             return InteractionResult.FAIL;
         }
         int count = player.isShiftKeyDown() ? stack.getCount() : 1;
         for (int i = 0; i < count; i++) {
             quests.engine().openCrate(serverPlayer, table);
         }
-        level.playSound(null, player.blockPosition(), SoundEvents.CHEST_OPEN.value(), SoundSource.PLAYERS, 0.6F, 1.1F);
+        level.playSound(null, player.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.PLAYERS, 0.6F, 1.1F);
         stack.consume(count, player);
         return InteractionResult.CONSUME;
     }

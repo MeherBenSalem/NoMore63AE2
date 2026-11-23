@@ -88,7 +88,7 @@ public class PickerScreen extends Screen {
         Minecraft mc = Minecraft.getInstance();
         Set<String> seen = new LinkedHashSet<>();
         if (mc.player != null) {
-            for (ItemStack stack : mc.player.getInventory().items) {
+            for (ItemStack stack : mc.player.getInventory().getNonEquipmentItems()) {
                 if (!stack.isEmpty()) {
                     ItemStack copy = stack.copyWithCount(1);
                     String key = BuiltInRegistries.ITEM.getKey(copy.getItem()) + copy.getComponentsPatch().toString();
@@ -132,8 +132,8 @@ public class PickerScreen extends Screen {
             case BLOCK -> registry(options, BuiltInRegistries.BLOCK, tags, id -> Icon.of(BuiltInRegistries.BLOCK.getValue(id).asItem()));
             case FLUID -> registry(options, BuiltInRegistries.FLUID, tags, id -> Icon.of(BuiltInRegistries.FLUID.getValue(id).getBucket()));
             case ENTITY -> registry(options, BuiltInRegistries.ENTITY_TYPE, tags, id -> {
-                SpawnEggItem egg = SpawnEggItem.byId(BuiltInRegistries.ENTITY_TYPE.getValue(id));
-                return egg == null ? Icon.EMPTY : Icon.of(egg);
+                var egg = SpawnEggItem.byId(BuiltInRegistries.ENTITY_TYPE.getValue(id));
+                return egg.isEmpty() ? Icon.EMPTY : Icon.of(egg.get().value());
             });
             case SOUND -> registry(options, BuiltInRegistries.SOUND_EVENT, false, id -> Icon.EMPTY);
             case STAT -> registry(options, BuiltInRegistries.CUSTOM_STAT, false, id -> Icon.EMPTY);
@@ -174,7 +174,7 @@ public class PickerScreen extends Screen {
         ids.sort(null);
         for (Identifier id : ids) {
             Component label = Component.literal(id.toString());
-            T value = registry.get(id);
+            T value = registry.getValue(id);
             if (value instanceof EntityType<?> type) {
                 label = type.getDescription().copy().append(Component.literal("  " + id).withStyle(ChatFormatting.DARK_GRAY));
             } else if (value instanceof net.minecraft.world.level.block.Block block) {

@@ -101,7 +101,7 @@ public final class VeinClient {
         shape = Math.floorMod(shape + (delta > 0 ? -1 : 1), VeinShape.values().length);
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.player.displayClientMessage(Component.translatable("corerpg_quests.vein.shape", shape().displayName()), true);
+            mc.gui.hud.setOverlayMessage(Component.translatable("corerpg_quests.vein.shape", shape().displayName()), false);
         }
         previewAge = 100;
         return true;

@@ -66,7 +66,7 @@ public class PropertyEditorScreen extends Screen {
     private int panelWidth;
     private int panelHeight;
     private int labelWidth;
-    private @Nullable EditBox weightBox;
+    private @Nullable dev.nightbeam.corerpg.quests.client.screen.FilteredEditBox weightBox;
     private double originalWeight = -1;
     private ThemedButton saveButton;
     private @Nullable String error;
@@ -155,7 +155,7 @@ public class PropertyEditorScreen extends Screen {
         saveButton = addRenderableWidget(new ThemedButton(left + panelWidth - 154, by, 70, 16, Component.translatable("corerpg_quests.gui.save"), b -> save(), Theme.SAGE));
         addRenderableWidget(new ThemedButton(left + panelWidth - 78, by, 70, 16, Component.translatable("gui.cancel"), b -> cancel(), Theme.MUTED));
         if (originalWeight >= 0) {
-            weightBox = new EditBox(font, left + 60, by + 1, 60, 14, Component.translatable("corerpg_quests.gui.weight"));
+            weightBox = new dev.nightbeam.corerpg.quests.client.screen.FilteredEditBox(font, left + 60, by + 1, 60, 14, Component.translatable("corerpg_quests.gui.weight"));
             weightBox.setValue(trimNumber(currentWeight()));
             weightBox.setFilter(s -> s.matches("[0-9.]*"));
             addRenderableWidget(weightBox);
@@ -593,7 +593,7 @@ public class PropertyEditorScreen extends Screen {
         for (Row row : rows) {
             for (AbstractWidget w : row.widgets) {
                 if (w.visible) {
-                    w.render(g, mouseX, mouseY, partialTick);
+                    w.extractRenderState(g, mouseX, mouseY, partialTick);
                 }
             }
         }

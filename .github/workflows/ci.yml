@@ -91,32 +91,35 @@ jobs:
           ./gradlew build --no-daemon --continue -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64,JAVA_HOME_21_X64,JAVA_HOME_25_X64
       # TEMP (porting): print the Minecraft signatures the port depends on.
       - name: API dump
-        if: always() && startsWith(matrix.ws, '26.')
+        if: always()
         shell: bash
+        env:
+          WS: ${{ matrix.ws }}
         run: |
           set +e
           J=""
-          for j in $(find ~/.gradle/caches "$GITHUB_WORKSPACE/${{ matrix.ws }}" -name '*.jar' -size +8M 2>/dev/null); do
+          for j in $(find ~/.gradle/caches "$GITHUB_WORKSPACE/$WS" -name '*.jar' -size +8M 2>/dev/null); do
             if unzip -l "$j" 2>/dev/null | grep -q 'net/minecraft/client/MouseHandler.class'; then J="$j"; break; fi
           done
           echo "jar: $J"
           [ -n "$J" ] || exit 0
-          JP="$JAVA_HOME_25_X64/bin/javap"
-          for c in net.minecraft.world.entity.player.Inventory net.minecraft.server.PlayerAdvancements net.minecraft.world.item.BucketItem \
-                   net.minecraft.advancements.triggers.BredAnimalsTrigger net.minecraft.advancements.triggers.ChangeDimensionTrigger \
-                   net.minecraft.advancements.triggers.ConsumeItemTrigger net.minecraft.advancements.triggers.EnchantedItemTrigger \
-                   net.minecraft.advancements.triggers.FishingRodHookedTrigger net.minecraft.advancements.triggers.InventoryChangeTrigger \
-                   net.minecraft.advancements.triggers.KilledTrigger net.minecraft.advancements.triggers.TameAnimalTrigger \
-                   net.minecraft.advancements.triggers.TradeTrigger net.minecraft.client.MouseHandler com.mojang.blaze3d.platform.InputConstants \
-                   net.minecraft.server.permissions.LevelBasedPermissionSet net.minecraft.world.item.SpawnEggItem net.minecraft.server.players.NameAndId \
-                   net.minecraft.client.gui.GuiGraphicsExtractor net.minecraft.client.gui.components.toasts.Toast \
-                   net.minecraft.client.gui.components.MultiLineEditBox net.minecraft.client.KeyMapping net.minecraft.world.item.BlockItem; do
-            echo "=== $c"; "$JP" -p -cp "$J" "$c" 2>&1 | grep -v '^Compiled'
+          python3 scripts/tmp_api_dump.py "$J" "$WS"
+          JP="$JAVA_HOME_21_X64/bin/javap"
+          LIST="net.minecraft.client.Screenshot net.minecraft.client.gui.components.toasts.Toast net.minecraft.client.gui.screens.Screen net.minecraft.client.gui.components.AbstractWidget net.minecraft.client.gui.components.EditBox net.minecraft.client.gui.components.MultiLineEditBox net.minecraft.world.entity.player.Inventory net.minecraft.server.PlayerAdvancements net.minecraft.client.gui.GuiGraphics net.minecraft.world.level.storage.loot.LootDataManager net.minecraft.client.MouseHandler net.minecraft.client.gui.components.toasts.ToastComponent"
+          if [ "${WS#26.}" != "$WS" ]; then
+            JP="$JAVA_HOME_25_X64/bin/javap"
+            LIST="net.minecraft.client.gui.components.EditBox net.minecraft.client.gui.components.AbstractWidget net.minecraft.ChatFormatting net.minecraft.network.chat.TextColor net.minecraft.server.ReloadableServerRegistries\$Holder net.minecraft.client.input.CharacterEvent net.minecraft.client.input.KeyEvent net.minecraft.client.gui.Gui net.minecraft.client.gui.screens.Screen net.minecraft.client.gui.GuiGraphicsExtractor net.minecraft.world.entity.player.Player net.minecraft.client.player.LocalPlayer net.minecraft.client.gui.components.toasts.ToastManager"
+          fi
+          for c in $LIST; do
+            echo "=== $c"
+            "$JP" -p -cp "$J" "$c" 2>&1 | grep -v -e '^Compiled' -e 'lambda[$]'
           done
-          for c in net.minecraft.world.item.ItemStack net.minecraft.world.entity.player.Player net.minecraft.world.level.block.Block \
-                   net.minecraft.server.level.ServerPlayer net.minecraft.server.level.ServerPlayerGameMode net.minecraft.server.MinecraftServer; do
-            echo "=== $c (filtered)"; "$JP" -p -cp "$J" "$c" 2>&1 | grep -E 'interactOn|restoreFrom|onCraftedBy|popResource|popExperience|saveAllChunks|destroyBlock|useItemOn|hasPermissions|permissions\(|getGameProfile|createCommandSourceStack|getProfileCache|services\(|drop\('
-          done
+          echo "=== Minecraft (filtered)"
+          "$JP" -p -cp "$J" net.minecraft.client.Minecraft 2>&1 | grep -E 'Screen|gui|hasControlDown|hasShiftDown|hasAltDown|oast'
+          echo "=== BlockStateBase (filtered)"
+          "$JP" -p -cp "$J" 'net.minecraft.world.level.block.state.BlockBehaviour$BlockStateBase' 2>&1 | grep -E 'Tag|tags|Holder|getCloneItemStack'
+          echo "=== EntityType (filtered)"
+          "$JP" -p -cp "$J" net.minecraft.world.entity.EntityType 2>&1 | grep -E ' is[(]|Holder'
       - uses: actions/upload-artifact@v4
         if: hashFiles(format('{0}/settings.gradle', matrix.ws)) != ''
         with:

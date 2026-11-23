@@ -233,7 +233,7 @@ public class FilterEditorScreen extends Screen {
             setFocused(editor);
             editor.setFocused(true);
             for (char c : snippet.toCharArray()) {
-                editor.charTyped(new CharacterEvent(c, 0));
+                editor.charTyped(new CharacterEvent(c));
             }
         }
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
