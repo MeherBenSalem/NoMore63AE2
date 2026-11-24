@@ -1,18 +1,17 @@
 # Marketing
 
-Listing copy and artwork for CurseForge and Modrinth, in the same style as NightBeam's other RPG mods (RPG Attribute
+Listing copy and artwork for CurseForge (NightBeam publishes to CurseForge only), in the same style as NightBeam's other RPG mods (RPG Attribute
 System, Remnant Bosses): gold Cinzel titles over a dark, blurred in-game backdrop with slow golden motes.
 
 | Path | What it is |
 |------|------------|
-| `curseforge/description.md` | The project description (Markdown; also works on Modrinth). Images load from this repo's `main` branch. |
+| `curseforge/description.md` | The project description (Markdown). Images load from this repo's `main` branch. |
 | `curseforge/summary.txt` | The one-line summary (under 250 characters). |
 | `images/icon.png` | 512×512 project icon: the quest tome in a gold ring, tagged QUESTS. |
 | `images/banner.png` | 1800×600 header banner. |
 | `images/card-*.png` | 1600×900 feature cards for the description and the gallery. |
 | `images/header-*.png`, `images/divider.png` | Transparent section headers and a divider. |
 | `images/screenshots/*.jpg` | Real in-game captures (NeoForge 1.21.1, 1920×1080, GUI scale 3) used by the cards and the gallery. |
-| `modrinth/description.md`, `modrinth/summary.txt` | The Modrinth copy, generated from `curseforge/` by `python3 tools/make_modrinth_md.py .` (the gallery section becomes a pointer to Modrinth's Gallery tab). |
 | `source/render.cjs` | Renders every PNG above from the screenshots and the mod's bundled fonts. |
 | `source/backdrop.jpg` | The blurred scenery behind the banner and cards (an in-game capture). |
 

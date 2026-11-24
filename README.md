@@ -148,12 +148,12 @@ shared version and the metadata ranges. Release notes for a version live in `pat
 ## Releasing
 
 CI (`.github/workflows/ci.yml`) builds all 8 jars on every push to `main` that touches the build. Publishing to
-Modrinth and CurseForge is `.github/workflows/publish.yml`, run by hand (`version`, `dry_run`) or by a `v*.*.*` tag;
+CurseForge is `.github/workflows/publish.yml`, run by hand (`version`, `dry_run`) or by a `v*.*.*` tag;
 it never runs on a plain push. It refuses a second release of the mod on the same day (Africa/Tunis), takes the jars
 from the GitHub Release or a build from source, and fails unless exactly the 8 jars are found. It needs the secrets
-`MODRINTH_TOKEN`, `CURSEFORGE_TOKEN`, `CURSEFORGE_API_KEY` and the variables `CORERPG_QUESTS_MODRINTH_ID`,
-`CORERPG_QUESTS_CURSEFORGE_ID` (they default to this mod's projects, `ywtf09FK` and `1585209`). Modrinth version
-numbers look like `1.0.2+fabric-1.21.1`.
+`CURSEFORGE_TOKEN` (upload token) and `CURSEFORGE_API_KEY` (Core API key) and the variable
+`CORERPG_QUESTS_CURSEFORGE_ID` (it defaults to this mod's project, `1585209`). NightBeam publishes to CurseForge
+only; the Modrinth page stays up but gets no new versions.
 
 ## Project layout
 
@@ -164,7 +164,7 @@ numbers look like `1.0.2+fabric-1.21.1`.
 1.20.1/forge/      Forge entry points and platform code
 1.21.1/tools/art/  scripts that generate the textures
 docs/              quest book format reference
-marketing/         CurseForge and Modrinth page and artwork
+marketing/         CurseForge page and artwork
 scripts/           target checks and the publish same-day guard
 tools/             release and documentation scripts
 ```

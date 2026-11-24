@@ -5,13 +5,11 @@ import path from 'node:path';
 const repo = path.resolve(process.argv[2] || '.');
 const version = process.argv[3];
 const dryRun = process.argv.includes('--dry-run');
-const modrinthOnly = process.argv.includes('--modrinth-only');
-const curseForgeOnly = process.argv.includes('--curseforge-only');
 
-if (!version || (modrinthOnly && curseForgeOnly)) {
-  throw new Error(
-    'Usage: node tools/publish-local.mjs <repo> <version> [--dry-run|--modrinth-only|--curseforge-only]',
-  );
+// NightBeam publishes to CurseForge only (24 Nov 2026); the existing Modrinth project stays up as it is but gets
+// no new versions.
+if (!version) {
+  throw new Error('Usage: node tools/publish-local.mjs <repo> <version> [--dry-run]');
 }
 
 function loadLocalEnvironment() {
@@ -44,24 +42,15 @@ function loadLocalEnvironment() {
 
 loadLocalEnvironment();
 
-const modrinthToken = process.env.MODRINTH_TOKEN;
 const curseForgeToken = process.env.CURSEFORGE_TOKEN;
 const curseForgeApiKey = process.env.CURSEFORGE_API_KEY;
-// Deliberately no defaults: this repository used to publish No More 63 AE2, and its old project ids must never be
-// reused for Core RPG - Quests Engine. Set both ids for the new projects in local.env.
-const modrinthId = process.env.CORERPG_QUESTS_MODRINTH_ID;
+// Deliberately no default: this repository used to publish No More 63 AE2, and its old project id must never be
+// reused for Core RPG - Quests Engine. Set the id of the new project in local.env.
 const curseForgeId = process.env.CORERPG_QUESTS_CURSEFORGE_ID;
-if (!curseForgeOnly && !modrinthId) {
-  throw new Error('CORERPG_QUESTS_MODRINTH_ID is not set (the Modrinth project id of Core RPG - Quests Engine)');
-}
-if (!modrinthOnly && !curseForgeId) {
+if (!curseForgeId) {
   throw new Error('CORERPG_QUESTS_CURSEFORGE_ID is not set (the CurseForge project id of Core RPG - Quests Engine)');
 }
-
-if (!curseForgeOnly && !modrinthToken) {
-  throw new Error('MODRINTH_TOKEN is not set');
-}
-if (!modrinthOnly && !curseForgeToken) {
+if (!curseForgeToken) {
   throw new Error('CURSEFORGE_TOKEN is not set');
 }
 
@@ -87,8 +76,7 @@ const targets = [
   { minecraft: '26.3', loader: 'neoforge' },
 ];
 
-// Fabric API on Modrinth / CurseForge; the Fabric jar needs it.
-const FABRIC_API_MODRINTH = 'P7dR8mSH';
+// Fabric API on CurseForge; the Fabric jar needs it.
 const FABRIC_API_CURSEFORGE = 'fabric-api';
 
 function findJar(target) {
@@ -121,68 +109,12 @@ const changelog =
     ?.replace(new RegExp(`^${version.replace(/\./g, '\\.')}[^\\n]*\\n+`), '')
     ?.trim() || `Release ${version}`;
 
-function modrinthVersionNumber(release) {
-  return `${version}+${release.loader}-${release.minecraft}`;
-}
-
-function modrinthVersionName(release) {
-  return `${version} · ${release.loader} · ${release.minecraft}`;
-}
-
 async function responseText(response, service) {
   const text = await response.text();
   if (!response.ok) {
     throw new Error(`${service} ${response.status}: ${text.slice(0, 500)}`);
   }
   return text;
-}
-
-async function fetchModrinthVersions() {
-  const response = await fetch(`https://api.modrinth.com/v2/project/${modrinthId}/version`, {
-    headers: { Authorization: modrinthToken },
-  });
-  return JSON.parse(await responseText(response, 'Modrinth versions'));
-}
-
-async function publishModrinth(release, existing) {
-  const versionNumber = modrinthVersionNumber(release);
-  if (existing.some((item) => item.version_number === versionNumber)) {
-    console.log(`Modrinth SKIP ${versionNumber} (already exists)`);
-    return;
-  }
-
-  if (dryRun) {
-    console.log(`Modrinth DRY RUN ${versionNumber}`);
-    return;
-  }
-
-  const metadata = {
-    name: modrinthVersionName(release),
-    version_number: versionNumber,
-    changelog,
-    dependencies: release.loader === 'fabric'
-      ? [{ project_id: FABRIC_API_MODRINTH, dependency_type: 'required' }]
-      : [],
-    game_versions: [release.minecraft],
-    version_type: 'release',
-    loaders: [release.loader],
-    featured: false,
-    status: 'listed',
-    project_id: modrinthId,
-    file_parts: ['file'],
-    primary_file: 'file',
-  };
-  const form = new FormData();
-  form.append('data', JSON.stringify(metadata));
-  form.append('file', new Blob([fs.readFileSync(release.jar)]), path.basename(release.jar));
-
-  const response = await fetch('https://api.modrinth.com/v2/version', {
-    method: 'POST',
-    headers: { Authorization: modrinthToken },
-    body: form,
-  });
-  const result = JSON.parse(await responseText(response, 'Modrinth upload'));
-  console.log(`Modrinth OK ${versionNumber} (${result.id})`);
 }
 
 async function fetchCurseForgeVersions() {
@@ -267,16 +199,10 @@ for (const release of releases) {
   console.log(`- ${release.minecraft} ${release.loader}: ${path.basename(release.jar)}`);
 }
 
-const existingModrinth = curseForgeOnly ? [] : await fetchModrinthVersions();
-const curseForgeVersions = modrinthOnly ? [] : await fetchCurseForgeVersions();
-const existingCurseForge = modrinthOnly ? [] : await fetchCurseForgeFiles();
+const curseForgeVersions = await fetchCurseForgeVersions();
+const existingCurseForge = await fetchCurseForgeFiles();
 for (const release of releases) {
-  if (!curseForgeOnly) {
-    await publishModrinth(release, existingModrinth);
-  }
-  if (!modrinthOnly) {
-    await publishCurseForge(release, curseForgeVersions, existingCurseForge);
-  }
+  await publishCurseForge(release, curseForgeVersions, existingCurseForge);
 }
 
 console.log('Local publishing complete.');
